@@ -462,6 +462,12 @@
               "name": "pQuery",
               "type": "string",
               "value": "{{$context.$nodes.RESOLVE_DEMAND_HEADER_QUERY.$output.result.pQuery}}"
+            },
+            {
+              "id": "16_pFinder",
+              "name": "pFinder",
+              "type": "string",
+              "value": ""
             }
           ],
           "diagram": {
@@ -1818,7 +1824,7 @@
     "defaultModelConfiguration": "ORA_MODEL_CONFIG_PREMIUM_OPEN_AI_GPT_4_1_MINI"
   },
   "status": "DRAFT",
-  "version": 88582525,
+  "version": 88583866,
   "family": "SCM",
   "product": "INVENTORY_MANAGEMENT",
   "ownerName": null,
@@ -1832,6 +1838,6 @@
   "aiAppsCompatibleFlag": false,
   "followupEnabledFlag": false,
   "header": {
-    "ETag": "\"6\""
+    "ETag": "\"8\""
   }
 }
