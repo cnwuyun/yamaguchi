@@ -1,0 +1,77 @@
+{
+  "supportedObjectId": "100002240134939",
+  "$context": {
+    "etag": "1"
+  },
+  "name": "Inventory Standard Orders Demand Details BO",
+  "description": "A business object to get inventory sales order, transfer order and transfer order return demand source type details and their reservation status.",
+  "objectCode": "ORA_SCM_INVENTORYM_INVENTORYSTANDA",
+  "family": "SCM",
+  "product": "INVENTORY_MANAGEMENT",
+  "objectSource": "ADF_BC",
+  "restResourcePath": "/fscmRestApi/resources/latest/invOrderReservationStatuses",
+  "restResourceIdentifier": "-1",
+  "seededFlag": true,
+  "mandatoryFlag": false,
+  "objectProperties": {
+    "jsonSchemaName": "supportedObjectProperties",
+    "jsonSchemaVersion": 1,
+    "tools": [
+      {
+        "name": "getall_invOrderReservationStatuses",
+        "description": "Get all reservation statuses",
+        "operationType": "GET",
+        "resourcePath": "/fscmRestApi/resources/latest/invOrderReservationStatuses?onlyData=true&limit={pLimit}&offset={pOffset}&q={pQuery}{pFinder}&orderBy=ExpectedDate:desc",
+        "resourceType": "ADF_BC_FIXED_QUERY",
+        "bodyTemplate": "",
+        "useNativeAuthentication": true,
+        "type": "BUS_OBJECT",
+        "parameterDefinitions": [
+          {
+            "name": "pLimit",
+            "dataType": "number",
+            "description": "This parameter restricts the number of resources returned inside the resource collection. If the limit exceeds the resource count then the framework will only return the available resources.",
+            "id": 2,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pOffset",
+            "dataType": "number",
+            "description": "Value to define the starting position of the resource collection.",
+            "id": 3,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pQuery",
+            "dataType": "string",
+            "description": "This value is the dynamically query built by the agent, it contains the predicate for filtering against this service.",
+            "id": 4,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pFinder",
+            "dataType": "string",
+            "description": "This value is the dynamically finder built by the agent, it contains the predicate for filtering by filterByItemExpectedDate finder.",
+            "id": 5,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          }
+        ],
+        "headers": {
+          "REST-Framework-Version": "9"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,371 @@
+{
+  "supportedObjectId": "100002240134920",
+  "$context": {
+    "etag": "1"
+  },
+  "name": "Reservation Details BO",
+  "description": "A business object to Inquiry reservations for given query parameters such as demand/supply document, Item number or warehouse/organization details.",
+  "objectCode": "ORA_SCM_INVENTORYM_RESERVATIONDETA",
+  "family": "SCM",
+  "product": "INVENTORY_MANAGEMENT",
+  "objectSource": "ADF_BC",
+  "restResourcePath": "/fscmRestApi/resources/latest/inventoryReservationDetails",
+  "restResourceIdentifier": "-1",
+  "seededFlag": true,
+  "mandatoryFlag": false,
+  "objectProperties": {
+    "jsonSchemaName": "supportedObjectProperties",
+    "jsonSchemaVersion": 1,
+    "tools": [
+      {
+        "name": "getall_inventoryReservationDetails",
+        "description": "Get all reservations",
+        "operationType": "GET",
+        "resourcePath": "/fscmRestApi/resources/latest/inventoryReservationDetails?onlyData=true&limit={pLimit}&offset={pOffset}&q={pQuery}",
+        "resourceType": "ADF_BC_FIXED_QUERY",
+        "bodyTemplate": "",
+        "useNativeAuthentication": true,
+        "type": "BUS_OBJECT",
+        "parameterDefinitions": [
+          {
+            "name": "pLimit",
+            "dataType": "number",
+            "description": "This parameter restricts the number of resources returned inside the resource collection. If the limit exceeds the resource count then the framework will only return the available resources.",
+            "id": 2,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pOffset",
+            "dataType": "number",
+            "description": "Value to define the starting position of the resource collection.",
+            "id": 3,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pQuery",
+            "dataType": "string",
+            "description": "This value is the dynamically query built by the agent, it contains the predicate for filtering against this service.",
+            "id": 4,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "ReservationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the reservation information associated with a demand document.",
+            "id": 5,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "InventoryItemId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the item in inventory that the warehouse reserves to fulfill the item.",
+            "id": 6,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ItemNumber",
+            "dataType": "string",
+            "description": "Number that identifies the inventory item.",
+            "id": 7,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the warehouse organization that reserves inventory to fulfill the item.",
+            "id": 8,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the warehouse organization that reserves inventory to fulfill the item.",
+            "id": 9,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceTypeId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the type of document that requests the inventory reservation.",
+            "id": 10,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceType",
+            "dataType": "string",
+            "description": "Type of document associated with an inventory reservation. A list of accepted values is defined in the lookup type INV_RESERVATION_SOURCE_TYPES. Values are User Defined, Transfer Order Return, Sales Order, Shipment Request, Account, Movement Request, Account Alias, Transfer order, or Cycle Count.",
+            "id": 11,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceTypeId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the type of the supply document.",
+            "id": 12,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceType",
+            "dataType": "string",
+            "description": "Type of the supply document. A list of accepted values is defined in the lookup type INV_RESERVATION_SUPPLY_SRC_TYP. Values are Purchase Order, On Hand, Requisition, Transfer Order Return, Work Order, or Transfer Order.",
+            "id": 13,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceHeaderId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the demand document.",
+            "id": 14,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceHeaderNumber",
+            "dataType": "string",
+            "description": "Demand document number for a reservation.",
+            "id": 15,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceLineId",
+            "dataType": "integer",
+            "description": "ID of the demand line.",
+            "id": 16,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceLineNumber",
+            "dataType": "string",
+            "description": "Value that uniquely identifies the line number in the demand document.",
+            "id": 17,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceName",
+            "dataType": "string",
+            "description": "Name of the demand source.",
+            "id": 18,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SourceFulfillmentLineId",
+            "dataType": "integer",
+            "description": "Value that order orchestration uses to uniquely identify the reservation.",
+            "id": 19,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandQuantity",
+            "dataType": "number",
+            "description": "Demand quantity expressed in the primary unit of measure of the item.",
+            "id": 20,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandUOMCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the demand unit of measure.",
+            "id": 21,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandUnitOfMeasure",
+            "dataType": "string",
+            "description": "Demand unit of measure of the item.",
+            "id": 22,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceHeaderId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the supply document.",
+            "id": 23,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceHeaderNumber",
+            "dataType": "string",
+            "description": "Document that specifies supply details for the item.",
+            "id": 24,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceLineId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the line in the supply document.",
+            "id": 25,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceLineNumber",
+            "dataType": "string",
+            "description": "Line number in the supply document.",
+            "id": 26,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ExpectedDate",
+            "dataType": "string",
+            "description": "Date when the customer expects the item.",
+            "id": 27,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "Revision",
+            "dataType": "string",
+            "description": "Revision number of an item enabled for revision control.",
+            "id": 28,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "LotNumber",
+            "dataType": "string",
+            "description": "Number to identify the lot associated with an item or group of items enabled for lot control.",
+            "id": 29,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SubinventoryCode",
+            "dataType": "string",
+            "description": "Name of the subinventory that the warehouse uses to create the reservation.",
+            "id": 30,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SubinventoryName",
+            "dataType": "string",
+            "description": "Name of the subinventory.",
+            "id": 31,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "LocatorName",
+            "dataType": "string",
+            "description": "Physical area in the subinventory, such as a row, aisle, bin, or shelf to stores items.",
+            "id": 32,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OperationSequenceNumber",
+            "dataType": "string",
+            "description": "Sequence number of a specific operation as defined in a work order.",
+            "id": 33,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ShipToCustomer",
+            "dataType": "string",
+            "description": "Customer on the sales order.",
+            "id": 34,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplierName",
+            "dataType": "string",
+            "description": "Name that identifies the supplier of the reserved material.",
+            "id": 35,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "RequirementDate",
+            "dataType": "string",
+            "description": "Date when the customer requires the item.",
+            "id": 36,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "PrimaryReservationQuantity",
+            "dataType": "number",
+            "description": "Reserved quantity expressed in the primary unit of measure of the item.",
+            "id": 37,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "PrimaryUOMCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the primary unit of measure.",
+            "id": 38,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "PrimaryUnitOfMeasure",
+            "dataType": "string",
+            "description": "Primary unit of measure of the item.",
+            "id": 39,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ReservationQuantity",
+            "dataType": "number",
+            "description": "Reservation quantity in the primary unit of measure.",
+            "id": 40,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ReservationUOMCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the unit of measure that the user chooses when placing the reservation.",
+            "id": 41,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ReservationUnitOfMeasure",
+            "dataType": "string",
+            "description": "Unit of measure that the user chooses when placing a reservation.",
+            "id": 42,
+            "isToken": false,
+            "defaultValue": ""
+          }
+        ],
+        "headers": {
+          "REST-Framework-Version": "9"
+        }
+      }
+    ]
+  }
+}

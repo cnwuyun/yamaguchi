@@ -1,0 +1,303 @@
+{
+  "supportedObjectId": "100002240134921",
+  "$context": {
+    "etag": "1"
+  },
+  "name": "Reservations Document Lines BO",
+  "description": "A business object to get demand document details and their reservation details.",
+  "objectCode": "ORA_SCM_INVENTORYM_RESERVATIONSDOC",
+  "family": "SCM",
+  "product": "INVENTORY_MANAGEMENT",
+  "objectSource": "ADF_BC",
+  "restResourcePath": "/fscmRestApi/resources/latest/reservationsByDocumentLines",
+  "restResourceIdentifier": "-1",
+  "seededFlag": true,
+  "mandatoryFlag": false,
+  "objectProperties": {
+    "jsonSchemaName": "supportedObjectProperties",
+    "jsonSchemaVersion": 1,
+    "tools": [
+      {
+        "name": "getall_reservationsByDocumentLines",
+        "description": "Get reservation details for all demand document lines.",
+        "operationType": "GET",
+        "resourcePath": "/fscmRestApi/resources/latest/reservationsByDocumentLines?onlyData=true&limit={pLimit}&offset={pOffset}&finder=FindByDemandAndUOMType;bindUOMType=ORDERED,bindDemandSourceTypeId={pDemandSourceTypeId},bindDemandSourceHeaderId={pDemandSourceHeaderId}&q=OrganizationCode='{pOrganizationCode}'",
+        "resourceType": "ADF_BC_FIXED_QUERY",
+        "bodyTemplate": "",
+        "useNativeAuthentication": true,
+        "type": "BUS_OBJECT",
+        "parameterDefinitions": [
+          {
+            "name": "pLimit",
+            "dataType": "number",
+            "description": "This parameter restricts the number of resources returned inside the resource collection. If the limit exceeds the resource count then the framework will only return the available resources.",
+            "id": 2,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pOffset",
+            "dataType": "number",
+            "description": "Value to define the starting position of the resource collection.",
+            "id": 3,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pDemandSourceTypeId",
+            "dataType": "number",
+            "description": "Value that uniquely identifies the demand source type that requests the inventory reservation.",
+            "id": 4,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pDemandSourceHeaderId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the demand source header document.",
+            "id": 5,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pOrganizationCode",
+            "dataType": "string",
+            "description": "Value that identifies the organization, organization code or warehouse that requests the inventory reservation.",
+            "id": 6,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the organization.",
+            "id": 7,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationCode",
+            "dataType": "string",
+            "description": "Code to represent the organization of an item on the order line.",
+            "id": 8,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "InventoryItemId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the inventory item.",
+            "id": 9,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ItemNumber",
+            "dataType": "string",
+            "description": "Number that identifies the inventory item.",
+            "id": 10,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceTypeId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the type of document that requests the inventory reservation.",
+            "id": 11,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceType",
+            "dataType": "string",
+            "description": "Name of the demand source type.",
+            "id": 12,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceHeaderId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the demand document.",
+            "id": 13,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceHeaderNumber",
+            "dataType": "string",
+            "description": "Value that uniquely identifies the demand source header.",
+            "id": 14,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceLineId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the demand line.",
+            "id": 15,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceLineNumber",
+            "dataType": "string",
+            "description": "Value that uniquely identifies the demand source line.",
+            "id": 16,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OperationSequenceNumber",
+            "dataType": "integer",
+            "description": "Sequence number of a specific operation as defined in a work order.",
+            "id": 17,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceName",
+            "dataType": "string",
+            "description": "Name of the demand source.",
+            "id": 18,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OrderedUOMCode",
+            "dataType": "string",
+            "description": "Code that uniquely identifies the ordered unit of measure (UOM) of an item shipped on a sales order line.",
+            "id": 19,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "PrimaryUOMCode",
+            "dataType": "string",
+            "description": "Code to represent the unit of measure of an item on the order line.",
+            "id": 20,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "RequestedQuantity",
+            "dataType": "number",
+            "description": "Quantity requested for an item on the order line.",
+            "id": 21,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ReservedQuantity",
+            "dataType": "number",
+            "description": "Reserved quantity of the item in the primary unit of measure.",
+            "id": 22,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "RequestedDate",
+            "dataType": "string",
+            "description": "Date when the item is requested on an order line.",
+            "id": 23,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DueDate",
+            "dataType": "string",
+            "description": "Date when the order is scheduled to be shipped.",
+            "id": 24,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ReleasedStatus",
+            "dataType": "string",
+            "description": "Released status according to shipment.",
+            "id": 25,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ReservationStatus",
+            "dataType": "string",
+            "description": "Reservation status of the item.",
+            "id": 26,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ReservationStatusCode",
+            "dataType": "number",
+            "description": "Reservation status code of the item.",
+            "id": 27,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "AvailableToReserveOnhand",
+            "dataType": "number",
+            "description": "Available-to-reserve quantity for an on-hand record.",
+            "id": 28,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "AvailableToReservePurchaseOrder",
+            "dataType": "number",
+            "description": "Available-to-reserve quantity for a purchase order.",
+            "id": 29,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "AvailableToReserveRequisition",
+            "dataType": "number",
+            "description": "Available to reserve quantity for a requisition.",
+            "id": 30,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "AvailableToReserveTransferOrder",
+            "dataType": "number",
+            "description": "Available-to-reserve quantity for a transfer order.",
+            "id": 31,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "AvailableToReserveTransferOrderReturn",
+            "dataType": "number",
+            "description": "Quantity available to reserve for transfer order return.",
+            "id": 32,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "AvailableToReserveWorkOrder",
+            "dataType": "number",
+            "description": "Available-to-reserve quantity for a work order.",
+            "id": 33,
+            "isToken": false,
+            "defaultValue": ""
+          }
+        ],
+        "headers": {
+          "REST-Framework-Version": "9"
+        }
+      }
+    ]
+  }
+}

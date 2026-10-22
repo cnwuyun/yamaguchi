@@ -1,0 +1,1837 @@
+{
+  "workflowId": "300000340783052",
+  "workflowCode": "INVENTORY_RESERVATIONS_AI_ASSISTANT_WORKFLOW_AGENT_V1_YY",
+  "name": "Inventory Reservations AI Assistant (workflow agent) v1.0 _YY",
+  "description": "Workflow-based split of RESERVATIONSWORKER_V10_YY: deterministic BO/tool nodes with LLM intent extraction and response rendering.",
+  "specification": {
+    "jsonSchemaName": "Workflow.spec",
+    "jsonSchemaVersion": "1",
+    "inputs": [],
+    "outputSpecification": " ",
+    "agentsValueMappings": [],
+    "dataPipeline": {
+      "pipelineNodes": [
+        {
+          "id": "start",
+          "code": "START",
+          "type": "START",
+          "metadata": {
+            "name": "Start",
+            "description": "Start of data pipeline"
+          },
+          "outcomes": {
+            "success": "1"
+          },
+          "inputs": [],
+          "diagram": {
+            "x": 9800,
+            "y": 5000
+          }
+        },
+        {
+          "id": "1",
+          "code": "GET_USER_SESSION",
+          "type": "TOOL",
+          "metadata": {
+            "name": "Get User Session",
+            "toolCode": "ORA_USER_SESSION_TOOL"
+          },
+          "outcomes": {
+            "success": "2"
+          },
+          "inputs": [],
+          "diagram": {
+            "x": 9800,
+            "y": 5206
+          }
+        },
+        {
+          "id": "2",
+          "code": "CLASSIFY_REQUEST",
+          "type": "LLM",
+          "metadata": {
+            "name": "Classify Request",
+            "chatHistoryEnabled": true
+          },
+          "outcomes": {
+            "success": "3"
+          },
+          "inputs": [
+            {
+              "id": "2_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You are the intent classifier of an inventory reservations assistant. Map each user request (using the current message plus any prior conversation already provided by chat history) into a single structured JSON result. Never call tools and never produce a user-facing reply; output only the JSON.\n\nRules:\n- action must be one of: ViewReservations, FetchDemandDocuments, FetchDemandDocumentLineDetails, FetchSupplyDocuments, FetchSupplyDocumentLineDetails, CreateOrderReservation, AutoReserve, UpdateReservation, DeleteReservation, GeneralHelp.\n- demandSourceTypeId is one of: 2 (Sales order), 8 (Transfer order), 1 (Transfer order return), 5 (Work order), or empty when not mentioned.\n- reservationStatus is one of: Unreserved, Partially Reserved, Reserved, or empty.\n- reservationMode is single, auto, or none.\n- expectedStartDate and expectedEndDate use YYYY-MM-DD. Map 'next week' and similar phrases to concrete dates when possible.\n- deleteConfirmed is true only when the user has confirmed a deletion with Yes/Y; otherwise false.\n- Fill every known field; leave unknown ones as empty strings. Booleans default to false."
+            },
+            {
+              "id": "2_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Extract a structured intent from the user request. Return strict JSON matching the declared output schema, wrapped in a top-level \"result\" object.\n\nUser message: {{$context.$system.$inputMessage}}\nSession context: {{$context.$nodes.GET_USER_SESSION.$output}}\n\nReturn only the JSON object."
+            }
+          ],
+          "diagram": {
+            "x": 9800,
+            "y": 5428
+          },
+          "outputSpecification": "{\"type\":\"object\",\"properties\":{\"result\":{\"type\":\"object\",\"properties\":{\"action\":{\"type\":\"string\"},\"language\":{\"type\":\"string\"},\"territory\":{\"type\":\"string\"},\"timezone\":{\"type\":\"string\"},\"organizationCode\":{\"type\":\"string\"},\"organizationName\":{\"type\":\"string\"},\"itemNumber\":{\"type\":\"string\"},\"itemName\":{\"type\":\"string\"},\"customerName\":{\"type\":\"string\"},\"demandSourceTypeId\":{\"type\":\"string\"},\"demandSourceHeaderNumber\":{\"type\":\"string\"},\"demandSourceHeaderId\":{\"type\":\"string\"},\"demandSourceLineId\":{\"type\":\"string\"},\"demandSourceLineNumber\":{\"type\":\"string\"},\"reservationStatus\":{\"type\":\"string\"},\"expectedStartDate\":{\"type\":\"string\"},\"expectedEndDate\":{\"type\":\"string\"},\"reservationMode\":{\"type\":\"string\"},\"supplySourceTypeId\":{\"type\":\"string\"},\"supplySourceHeaderNumber\":{\"type\":\"string\"},\"supplySourceLineNumber\":{\"type\":\"string\"},\"reservationId\":{\"type\":\"string\"},\"reservationQuantity\":{\"type\":\"string\"},\"reservationUOMCode\":{\"type\":\"string\"},\"deleteConfirmed\":{\"type\":\"boolean\"}}}}}"
+        },
+        {
+          "id": "3",
+          "code": "CHECK_ORGANIZATION",
+          "type": "CONDITION",
+          "metadata": {
+            "name": "Check Organization"
+          },
+          "outcomes": {
+            "true": "4",
+            "false": "5"
+          },
+          "inputs": [
+            {
+              "id": "3_condition",
+              "name": "condition",
+              "type": "string",
+              "value": "{{!!$context.$nodes.CLASSIFY_REQUEST.$output.result.organizationCode}}"
+            }
+          ],
+          "diagram": {
+            "x": 9800,
+            "y": 5650
+          },
+          "convergenceTargetId": "5"
+        },
+        {
+          "id": "4",
+          "code": "VALIDATE_ORGANIZATION",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "Validate Organization",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_INVENTORYACCESS",
+            "functionName": "getall_inventoryAccessibleOrganizations"
+          },
+          "outcomes": {
+            "success": "45"
+          },
+          "inputs": [
+            {
+              "id": "4_pOrganizationCode",
+              "name": "pOrganizationCode",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.organizationCode}}"
+            },
+            {
+              "id": "4_pOrganizationName",
+              "name": "pOrganizationName",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.organizationName}}"
+            }
+          ],
+          "diagram": {
+            "x": 9350,
+            "y": 5872
+          },
+          "outputSpecification": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"totalResults\": {\n      \"type\": \"integer\"\n    },\n    \"count\": {\n      \"type\": \"integer\"\n    },\n    \"hasMore\": {\n      \"type\": \"boolean\"\n    },\n    \"limit\": {\n      \"type\": \"integer\"\n    },\n    \"offset\": {\n      \"type\": \"integer\"\n    },\n    \"links\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"href\": {\n            \"type\": \"string\"\n          },\n          \"rel\": {\n            \"type\": \"string\",\n            \"enum\": [\n              \"self\",\n              \"lov\",\n              \"parent\",\n              \"canonical\",\n              \"child\",\n              \"enclosure\",\n              \"action\",\n              \"custom\"\n            ]\n          },\n          \"name\": {\n            \"type\": \"string\"\n          },\n          \"kind\": {\n            \"type\": \"string\",\n            \"enum\": [\n              \"collection\",\n              \"item\",\n              \"describe\",\n              \"other\"\n            ]\n          }\n        },\n        \"additionalProperties\": false\n      }\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"@context\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"key\": {\n                \"type\": \"string\"\n              },\n              \"headers\": {\n                \"type\": \"object\",\n                \"properties\": {\n                  \"ETag\": {\n                    \"type\": \"string\"\n                  }\n                },\n                \"additionalProperties\": false\n              },\n              \"links\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"href\": {\n                      \"type\": \"string\"\n                    },\n                    \"rel\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"self\",\n                        \"lov\",\n                        \"parent\",\n                        \"canonical\",\n                        \"child\",\n                        \"enclosure\",\n                        \"action\",\n                        \"custom\"\n                      ]\n                    },\n                    \"name\": {\n                      \"type\": \"string\"\n                    },\n                    \"kind\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"collection\",\n                        \"item\",\n                        \"describe\",\n                        \"other\"\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              }\n            },\n            \"additionalProperties\": false\n          },\n          \"OrganizationId\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigInt\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"OrganizationCode\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"OrganizationName\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ProjectReferenceEnabled\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"TrackCountryOfOriginFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"LotUOMConversionEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"AutoCreateLotUOMConversionFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"TimezoneCode\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ValidateBarcodeFormatFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"advancedInvParams\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"totalResults\": {\n                \"type\": \"integer\"\n              },\n              \"count\": {\n                \"type\": \"integer\"\n              },\n              \"hasMore\": {\n                \"type\": \"boolean\"\n              },\n              \"limit\": {\n                \"type\": \"integer\"\n              },\n              \"offset\": {\n                \"type\": \"integer\"\n              },\n              \"links\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"href\": {\n                      \"type\": \"string\"\n                    },\n                    \"rel\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"self\",\n                        \"lov\",\n                        \"parent\",\n                        \"canonical\",\n                        \"child\",\n                        \"enclosure\",\n                        \"action\",\n                        \"custom\"\n                      ]\n                    },\n                    \"name\": {\n                      \"type\": \"string\"\n                    },\n                    \"kind\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"collection\",\n                        \"item\",\n                        \"describe\",\n                        \"other\"\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              },\n              \"items\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"@context\": {\n                      \"type\": \"object\",\n                      \"additionalProperties\": false\n                    },\n                    \"CrossDockDueDateSortMeaning\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"PutAwaySuggestionPriorityOneMeaning\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"PutAwaySuggestionPriorityTwoMeaning\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"PutAwaySuggestionPriorityThreeMeaning\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"PutAwaySuggestionPriorityFourMeaning\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"PhysicalInvCountingModeMeaning\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CreatedBy\": {\n                      \"type\": \"string\"\n                    },\n                    \"CreationDate\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"LastUpdateDate\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"LastUpdateLogin\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"LastUpdatedBy\": {\n                      \"type\": \"string\"\n                    },\n                    \"OrganizationId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"OrganizationCode\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"OrganizationName\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"LPNEnabledFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"LPNPrefix\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"LPNSuffix\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"StartAutoLPNNumber\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"NextAutoLPNNumber\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"TotalLPNLength\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"integer\",\n                          \"format\": \"int32\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"LPNUCC128SuffixFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CrossDockEnabledFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CrossDockItemCategoryId\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigInt\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CrossDockItemCategoryName\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CrossDockDemandDueDays\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigInt\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CrossDockIncludeBackordersFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CrossDockDueDateSort\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"PutAwaySuggestionsEnabledFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"PutAwaySuggestionPriorityOne\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"PutAwaySuggestionPriorityTwo\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"PutAwaySuggestionPriorityThree\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"PutAwaySuggestionPriorityFour\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"PhysicalInvCountingMode\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CountriesOfOriginComminglingAllowedFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ProjectsComminglingAllowedFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"TasksComminglingAllowedFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"OutboundLoadCreationAllowedFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"TaskManagementAllowedFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"FullLPNFeatureFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"FullLPNOrgFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"LPNReuseAllowedFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CycleCountCountingMode\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CycleCountCountingModeMeaning\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"MHEEnableDeliveryCarts\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CrossDockAIEnabledFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CrossDockExistingReservationFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CrossDockExpectedSupplyDays\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigInt\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CrossDockExpectedSupplyFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"PutAwayAIEnabledFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              }\n            },\n            \"additionalProperties\": false,\n            \"required\": [\n              \"count\",\n              \"hasMore\",\n              \"limit\",\n              \"offset\",\n              \"links\"\n            ]\n          },\n          \"plantParameters\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"totalResults\": {\n                \"type\": \"integer\"\n              },\n              \"count\": {\n                \"type\": \"integer\"\n              },\n              \"hasMore\": {\n                \"type\": \"boolean\"\n              },\n              \"limit\": {\n                \"type\": \"integer\"\n              },\n              \"offset\": {\n                \"type\": \"integer\"\n              },\n              \"links\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"href\": {\n                      \"type\": \"string\"\n                    },\n                    \"rel\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"self\",\n                        \"lov\",\n                        \"parent\",\n                        \"canonical\",\n                        \"child\",\n                        \"enclosure\",\n                        \"action\",\n                        \"custom\"\n                      ]\n                    },\n                    \"name\": {\n                      \"type\": \"string\"\n                    },\n                    \"kind\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"collection\",\n                        \"item\",\n                        \"describe\",\n                        \"other\"\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              },\n              \"items\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"@context\": {\n                      \"type\": \"object\",\n                      \"additionalProperties\": false\n                    },\n                    \"OrganizationId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"EnableProcessManufacturingFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ProcessTerminologyEnabledFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              }\n            },\n            \"additionalProperties\": false,\n            \"required\": [\n              \"count\",\n              \"hasMore\",\n              \"limit\",\n              \"offset\",\n              \"links\"\n            ]\n          }\n        },\n        \"additionalProperties\": false\n      }\n    }\n  },\n  \"additionalProperties\": false,\n  \"required\": [\n    \"count\",\n    \"hasMore\",\n    \"limit\",\n    \"offset\",\n    \"links\"\n  ]\n}"
+        },
+        {
+          "id": "5",
+          "code": "CHECK_ITEM",
+          "type": "CONDITION",
+          "metadata": {
+            "name": "Check Item"
+          },
+          "outcomes": {
+            "true": "6",
+            "false": "7"
+          },
+          "inputs": [
+            {
+              "id": "5_condition",
+              "name": "condition",
+              "type": "string",
+              "value": "{{!!$context.$nodes.CLASSIFY_REQUEST.$output.result.itemNumber}}"
+            }
+          ],
+          "diagram": {
+            "x": 9125,
+            "y": 6316
+          },
+          "convergenceTargetId": "7"
+        },
+        {
+          "id": "6",
+          "code": "VALIDATE_ITEM",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "Validate Item",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_VALIDATEINVENTORYITEMS",
+            "functionName": "getall_itemsLOV"
+          },
+          "outcomes": {
+            "success": "46"
+          },
+          "inputs": [
+            {
+              "id": "6_pItemNumber",
+              "name": "pItemNumber",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.itemNumber}}"
+            },
+            {
+              "id": "6_pOrganizationCode",
+              "name": "pOrganizationCode",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.organizationCode}}"
+            }
+          ],
+          "diagram": {
+            "x": 8675,
+            "y": 6538
+          },
+          "outputSpecification": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"totalResults\": {\n      \"type\": \"integer\"\n    },\n    \"count\": {\n      \"type\": \"integer\"\n    },\n    \"hasMore\": {\n      \"type\": \"boolean\"\n    },\n    \"limit\": {\n      \"type\": \"integer\"\n    },\n    \"offset\": {\n      \"type\": \"integer\"\n    },\n    \"links\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"href\": {\n            \"type\": \"string\"\n          },\n          \"rel\": {\n            \"type\": \"string\",\n            \"enum\": [\n              \"self\",\n              \"lov\",\n              \"parent\",\n              \"canonical\",\n              \"child\",\n              \"enclosure\",\n              \"action\",\n              \"custom\"\n            ]\n          },\n          \"name\": {\n            \"type\": \"string\"\n          },\n          \"kind\": {\n            \"type\": \"string\",\n            \"enum\": [\n              \"collection\",\n              \"item\",\n              \"describe\",\n              \"other\"\n            ]\n          }\n        },\n        \"additionalProperties\": false\n      }\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"@context\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"key\": {\n                \"type\": \"string\"\n              },\n              \"headers\": {\n                \"type\": \"object\",\n                \"properties\": {\n                  \"ETag\": {\n                    \"type\": \"string\"\n                  }\n                },\n                \"additionalProperties\": false\n              },\n              \"links\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"href\": {\n                      \"type\": \"string\"\n                    },\n                    \"rel\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"self\",\n                        \"lov\",\n                        \"parent\",\n                        \"canonical\",\n                        \"child\",\n                        \"enclosure\",\n                        \"action\",\n                        \"custom\"\n                      ]\n                    },\n                    \"name\": {\n                      \"type\": \"string\"\n                    },\n                    \"kind\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"collection\",\n                        \"item\",\n                        \"describe\",\n                        \"other\"\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              }\n            },\n            \"additionalProperties\": false\n          },\n          \"OrganizationId\": {\n            \"type\": \"string\",\n            \"format\": \"BigInt\"\n          },\n          \"ItemId\": {\n            \"type\": \"string\",\n            \"format\": \"BigInt\"\n          },\n          \"ItemClassId\": {\n            \"type\": \"string\",\n            \"format\": \"BigInt\"\n          },\n          \"OrganizationCode\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ItemClass\": {\n            \"type\": \"string\"\n          },\n          \"ItemNumber\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ItemDescription\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"PrimaryUOMCode\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"InventoryItemStatusCode\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"CurrentPhaseCode\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ItemType\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ApprovalStatus\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ItemDefinitionOrgId\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigInt\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"Keyword\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"PlanningMethodValue\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"SerialGenerationValue\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"UserItemTypeValue\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ItemStatusValue\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"CreationDate\": {\n            \"type\": \"string\",\n            \"format\": \"date-time\"\n          },\n          \"LastUpdateDate\": {\n            \"type\": \"string\",\n            \"format\": \"date-time\"\n          },\n          \"DefaultGradeValue\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"DefaultLotStatusValue\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ExpirationActionValue\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"PrimaryUOMName\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ExtraQuery\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ExtraParameters\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"PartsSourcingCode\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"PartsSourcingValue\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"BuildInWIPFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"MaterialBillableCode\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ServiceDurationTypeCode\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ServiceDuration\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ServiceDurationPeriodCode\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ServiceDurationTypeValue\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ServiceDurationPeriodValue\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ExpirationDateCalculationBasis\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ExpirationDateCalculationBasisValue\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"BackToBackEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"SerialNumberControlCode\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"AllowMaintenanceAssetFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"AssetTrackedFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"EnableGenealogyTrackingFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"EnableIotFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"CreateFixedAsset\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"RequestId\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigInt\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"CreatedBy\": {\n            \"type\": \"string\"\n          },\n          \"LastUpdatedBy\": {\n            \"type\": \"string\"\n          },\n          \"LotControlCode\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"PrimaryImageURL\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"AutoCreatedConfigurationFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"BaseItemId\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigInt\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"CustomerOrderEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"CustomerOrderFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"EffectivityControl\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"InternallyTransferableFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"OutsideProcessServiceFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"PickComponentsFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"RevisionQuantityControlFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"SalesProductType\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ServiceableProductFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ShippableFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"StockEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"TransactionEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"TransferOrdersEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"AssembleToOrderFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"RestrictSubinventoriesFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"MaterialTransactionEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"BOMItemType\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"OrderManagementIndivisibleFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ChildLotEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"CycleCountEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"DefaultGrade\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"DefaultLotStatusId\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigInt\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ExpirationActionCode\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ExpirationActionInterval\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"GradeControlledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"HoldDays\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"InventoryItemFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"StockLocatorControl\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"LotMergeEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"LotSplitEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"LotStatusEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"LotTranslateEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"MaturityDays\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"RestrictLocatorsFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"RetestInterval\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"DefaultingControl\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"SecondaryUnitOfMeasure\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"SerialStatusEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"LotExpirationControl\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ShelfLifeDays\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"TrackingUnitOfMeasure\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"AllowUnorderedReceiptsFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ComnSupplyPrjDemandFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ContainerItemFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"DualUOMDeviationHigh\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"DualUOMDeviationLow\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"HardPeggingLevel\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"LotDivisibleFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ExpenditureTypeId\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigInt\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"PurchasingEnabledFlag\": {\n            \"anyOf\": [\n              {\n                \"type\": \"boolean\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"SecondaryUnitOfMeasureName\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"CrossReferenceRelationships\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"totalResults\": {\n                \"type\": \"integer\"\n              },\n              \"count\": {\n                \"type\": \"integer\"\n              },\n              \"hasMore\": {\n                \"type\": \"boolean\"\n              },\n              \"limit\": {\n                \"type\": \"integer\"\n              },\n              \"offset\": {\n                \"type\": \"integer\"\n              },\n              \"links\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"href\": {\n                      \"type\": \"string\"\n                    },\n                    \"rel\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"self\",\n                        \"lov\",\n                        \"parent\",\n                        \"canonical\",\n                        \"child\",\n                        \"enclosure\",\n                        \"action\",\n                        \"custom\"\n                      ]\n                    },\n                    \"name\": {\n                      \"type\": \"string\"\n                    },\n                    \"kind\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"collection\",\n                        \"item\",\n                        \"describe\",\n                        \"other\"\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              },\n              \"items\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"@context\": {\n                      \"type\": \"object\",\n                      \"additionalProperties\": false\n                    },\n                    \"CreationDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"LastUpdateDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"CreatedBy\": {\n                      \"type\": \"string\"\n                    },\n                    \"LastUpdateLogin\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"LastUpdatedBy\": {\n                      \"type\": \"string\"\n                    },\n                    \"ItemRelationshipId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"MasterOrganizationId\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigInt\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"MasterOrganizationCode\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"InventoryItemId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"Item\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CrossReferenceType\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CrossReference\": {\n                      \"type\": \"string\"\n                    },\n                    \"ApplyToAllOrganizationFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ApplicableOrganizationId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"ApplicableOrganizationCode\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"RelationshipDescription\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              }\n            },\n            \"additionalProperties\": false,\n            \"required\": [\n              \"count\",\n              \"hasMore\",\n              \"limit\",\n              \"offset\",\n              \"links\"\n            ]\n          },\n          \"GTINRelationships\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"totalResults\": {\n                \"type\": \"integer\"\n              },\n              \"count\": {\n                \"type\": \"integer\"\n              },\n              \"hasMore\": {\n                \"type\": \"boolean\"\n              },\n              \"limit\": {\n                \"type\": \"integer\"\n              },\n              \"offset\": {\n                \"type\": \"integer\"\n              },\n              \"links\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"href\": {\n                      \"type\": \"string\"\n                    },\n                    \"rel\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"self\",\n                        \"lov\",\n                        \"parent\",\n                        \"canonical\",\n                        \"child\",\n                        \"enclosure\",\n                        \"action\",\n                        \"custom\"\n                      ]\n                    },\n                    \"name\": {\n                      \"type\": \"string\"\n                    },\n                    \"kind\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"collection\",\n                        \"item\",\n                        \"describe\",\n                        \"other\"\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              },\n              \"items\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"@context\": {\n                      \"type\": \"object\",\n                      \"additionalProperties\": false\n                    },\n                    \"PackedItem\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CreationDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"LastUpdateDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"CreatedBy\": {\n                      \"type\": \"string\"\n                    },\n                    \"LastUpdateLogin\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"LastUpdatedBy\": {\n                      \"type\": \"string\"\n                    },\n                    \"UnitOfMeasureCode\": {\n                      \"type\": \"string\"\n                    },\n                    \"ItemRelationshipId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"PartyType\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"GTIN\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"OrganizationId\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigInt\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"OrganizationCode\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"InventoryItemId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"Item\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"RevisionCode\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"PartyName\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"RegistryId\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"UOM\": {\n                      \"type\": \"string\"\n                    },\n                    \"RelationshipDescription\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"EPCGTINSerial\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigDecimal\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              }\n            },\n            \"additionalProperties\": false,\n            \"required\": [\n              \"count\",\n              \"hasMore\",\n              \"limit\",\n              \"offset\",\n              \"links\"\n            ]\n          },\n          \"ItemCategories\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"totalResults\": {\n                \"type\": \"integer\"\n              },\n              \"count\": {\n                \"type\": \"integer\"\n              },\n              \"hasMore\": {\n                \"type\": \"boolean\"\n              },\n              \"limit\": {\n                \"type\": \"integer\"\n              },\n              \"offset\": {\n                \"type\": \"integer\"\n              },\n              \"links\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"href\": {\n                      \"type\": \"string\"\n                    },\n                    \"rel\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"self\",\n                        \"lov\",\n                        \"parent\",\n                        \"canonical\",\n                        \"child\",\n                        \"enclosure\",\n                        \"action\",\n                        \"custom\"\n                      ]\n                    },\n                    \"name\": {\n                      \"type\": \"string\"\n                    },\n                    \"kind\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"collection\",\n                        \"item\",\n                        \"describe\",\n                        \"other\"\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              },\n              \"items\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"@context\": {\n                      \"type\": \"object\",\n                      \"additionalProperties\": false\n                    },\n                    \"OrganizationId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"CreationDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"LastUpdateDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"InventoryItemId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"CreatedBy\": {\n                      \"type\": \"string\"\n                    },\n                    \"LastUpdateLogin\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"LastUpdatedBy\": {\n                      \"type\": \"string\"\n                    },\n                    \"ItemCategoryHierarchyName\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ItemCategoryHierarchyCode\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ItemId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"ItemCategoryId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"ItemCategoryAssignmentId\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigInt\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"OrganizationId1\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"ItemCatalog\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CategoryId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"CategoryName\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"SequenceNumber\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"integer\",\n                          \"format\": \"int32\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"AltItemCatCode\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ObjectVersionNumber\": {\n                      \"type\": \"integer\",\n                      \"format\": \"int32\"\n                    },\n                    \"CategoryCode\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"StartDate\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"date\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"EndDate\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"date\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"RequestId\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigInt\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              }\n            },\n            \"additionalProperties\": false,\n            \"required\": [\n              \"count\",\n              \"hasMore\",\n              \"limit\",\n              \"offset\",\n              \"links\"\n            ]\n          },\n          \"ItemDFF\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"totalResults\": {\n                \"type\": \"integer\"\n              },\n              \"count\": {\n                \"type\": \"integer\"\n              },\n              \"hasMore\": {\n                \"type\": \"boolean\"\n              },\n              \"limit\": {\n                \"type\": \"integer\"\n              },\n              \"offset\": {\n                \"type\": \"integer\"\n              },\n              \"links\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"href\": {\n                      \"type\": \"string\"\n                    },\n                    \"rel\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"self\",\n                        \"lov\",\n                        \"parent\",\n                        \"canonical\",\n                        \"child\",\n                        \"enclosure\",\n                        \"action\",\n                        \"custom\"\n                      ]\n                    },\n                    \"name\": {\n                      \"type\": \"string\"\n                    },\n                    \"kind\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"collection\",\n                        \"item\",\n                        \"describe\",\n                        \"other\"\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              },\n              \"items\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"@context\": {\n                      \"type\": \"object\",\n                      \"additionalProperties\": false\n                    },\n                    \"InventoryItemId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"OrganizationId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"__FLEX_Context\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"__FLEX_Context_DisplayValue\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              }\n            },\n            \"additionalProperties\": false,\n            \"required\": [\n              \"count\",\n              \"hasMore\",\n              \"limit\",\n              \"offset\",\n              \"links\"\n            ]\n          },\n          \"RelatedItemRelationships\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"totalResults\": {\n                \"type\": \"integer\"\n              },\n              \"count\": {\n                \"type\": \"integer\"\n              },\n              \"hasMore\": {\n                \"type\": \"boolean\"\n              },\n              \"limit\": {\n                \"type\": \"integer\"\n              },\n              \"offset\": {\n                \"type\": \"integer\"\n              },\n              \"links\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"href\": {\n                      \"type\": \"string\"\n                    },\n                    \"rel\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"self\",\n                        \"lov\",\n                        \"parent\",\n                        \"canonical\",\n                        \"child\",\n                        \"enclosure\",\n                        \"action\",\n                        \"custom\"\n                      ]\n                    },\n                    \"name\": {\n                      \"type\": \"string\"\n                    },\n                    \"kind\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"collection\",\n                        \"item\",\n                        \"describe\",\n                        \"other\"\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              },\n              \"items\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"@context\": {\n                      \"type\": \"object\",\n                      \"additionalProperties\": false\n                    },\n                    \"FromItemDescription\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"FromItemPrimaryUOM\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"FromItemClass\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"FromItemLifecyclePhase\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"FromItemApprovalStatus\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"FromItemStatus\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ToItemDescription\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ToItemPrimaryUOM\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ToItemClass\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ToItemLifecyclePhase\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ToItemApprovalStatus\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ToItemStatus\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CreationDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"LastUpdateDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"CreatedBy\": {\n                      \"type\": \"string\"\n                    },\n                    \"LastUpdateLogin\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"LastUpdatedBy\": {\n                      \"type\": \"string\"\n                    },\n                    \"FromItemSecondaryUOM\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ToItemSecondaryUOM\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"FromItemObjectType\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ToItemObjectType\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ItemRelationshipId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"OrganizationId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"OrganizationCode\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"FromInventoryItemId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"FromItem\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ToInventoryItemId\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigInt\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ToItem\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"MasterControlledFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"RelationshipType\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"RelationshipDescription\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"Rank\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigInt\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"StartDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"EndDateTime\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"date-time\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ReciprocalFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"PlanningEnabledFlag\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"boolean\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              }\n            },\n            \"additionalProperties\": false,\n            \"required\": [\n              \"count\",\n              \"hasMore\",\n              \"limit\",\n              \"offset\",\n              \"links\"\n            ]\n          },\n          \"SpokeSystemItemRelationships\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"totalResults\": {\n                \"type\": \"integer\"\n              },\n              \"count\": {\n                \"type\": \"integer\"\n              },\n              \"hasMore\": {\n                \"type\": \"boolean\"\n              },\n              \"limit\": {\n                \"type\": \"integer\"\n              },\n              \"offset\": {\n                \"type\": \"integer\"\n              },\n              \"links\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"href\": {\n                      \"type\": \"string\"\n                    },\n                    \"rel\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"self\",\n                        \"lov\",\n                        \"parent\",\n                        \"canonical\",\n                        \"child\",\n                        \"enclosure\",\n                        \"action\",\n                        \"custom\"\n                      ]\n                    },\n                    \"name\": {\n                      \"type\": \"string\"\n                    },\n                    \"kind\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"collection\",\n                        \"item\",\n                        \"describe\",\n                        \"other\"\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              },\n              \"items\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"@context\": {\n                      \"type\": \"object\",\n                      \"additionalProperties\": false\n                    },\n                    \"CreationDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"LastUpdateDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"CreatedBy\": {\n                      \"type\": \"string\"\n                    },\n                    \"LastUpdateLogin\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"LastUpdatedBy\": {\n                      \"type\": \"string\"\n                    },\n                    \"ItemRelationshipId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"OrganizationId\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigInt\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"OrganizationCode\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"InventoryItemId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"Item\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"SpokeSystemId\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigInt\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"SpokeSystemCode\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"SpokeSystemItem\": {\n                      \"type\": \"string\"\n                    },\n                    \"RelationshipDescription\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"StartDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"EndDateTime\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"date-time\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              }\n            },\n            \"additionalProperties\": false,\n            \"required\": [\n              \"count\",\n              \"hasMore\",\n              \"limit\",\n              \"offset\",\n              \"links\"\n            ]\n          },\n          \"TradingPartnerItemRelationships\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"totalResults\": {\n                \"type\": \"integer\"\n              },\n              \"count\": {\n                \"type\": \"integer\"\n              },\n              \"hasMore\": {\n                \"type\": \"boolean\"\n              },\n              \"limit\": {\n                \"type\": \"integer\"\n              },\n              \"offset\": {\n                \"type\": \"integer\"\n              },\n              \"links\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"href\": {\n                      \"type\": \"string\"\n                    },\n                    \"rel\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"self\",\n                        \"lov\",\n                        \"parent\",\n                        \"canonical\",\n                        \"child\",\n                        \"enclosure\",\n                        \"action\",\n                        \"custom\"\n                      ]\n                    },\n                    \"name\": {\n                      \"type\": \"string\"\n                    },\n                    \"kind\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"collection\",\n                        \"item\",\n                        \"describe\",\n                        \"other\"\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              },\n              \"items\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"@context\": {\n                      \"type\": \"object\",\n                      \"additionalProperties\": false\n                    },\n                    \"CreationDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"LastUpdateDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"CreatedBy\": {\n                      \"type\": \"string\"\n                    },\n                    \"LastUpdateLogin\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"LastUpdatedBy\": {\n                      \"type\": \"string\"\n                    },\n                    \"AcdType\": {\n                      \"type\": \"string\"\n                    },\n                    \"TradingPartnerItemDescription\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"TradingPartnerItemStatus\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"TradingPartnerStatus\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"ChangeLineId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"ItemRelationshipId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"OrganizationId\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigInt\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"OrganizationCode\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"InventoryItemId\": {\n                      \"type\": \"string\",\n                      \"format\": \"BigInt\"\n                    },\n                    \"Item\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"TradingPartnerType\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"TradingPartnerId\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"TradingPartnerName\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"RegistryId\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"TradingPartnerItemId\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigInt\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"TradingPartnerItemNumber\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"RelationshipDescription\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"StartDateTime\": {\n                      \"type\": \"string\",\n                      \"format\": \"date-time\"\n                    },\n                    \"EndDateTime\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"date-time\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CustomerItemRelationshipRank\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\",\n                          \"format\": \"BigInt\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"CompetitorItemRelationshipType\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    },\n                    \"RelationshipStatus\": {\n                      \"anyOf\": [\n                        {\n                          \"type\": \"string\"\n                        },\n                        {\n                          \"type\": \"null\"\n                        }\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              }\n            },\n            \"additionalProperties\": false,\n            \"required\": [\n              \"count\",\n              \"hasMore\",\n              \"limit\",\n              \"offset\",\n              \"links\"\n            ]\n          }\n        },\n        \"additionalProperties\": false\n      }\n    }\n  },\n  \"additionalProperties\": false,\n  \"required\": [\n    \"count\",\n    \"hasMore\",\n    \"limit\",\n    \"offset\",\n    \"links\"\n  ]\n}"
+        },
+        {
+          "id": "7",
+          "code": "ROUTE_ACTION",
+          "type": "SWITCH",
+          "metadata": {
+            "name": "Route Action"
+          },
+          "outcomes": {
+            "success": "39",
+            "ViewReservations": "8",
+            "FetchDemandDocuments": "9",
+            "FetchDemandDocumentLineDetails": "10",
+            "FetchSupplyDocuments": "18",
+            "FetchSupplyDocumentLineDetails": "19",
+            "CreateOrderReservation": "40",
+            "AutoReserve": "40",
+            "UpdateReservation": "23",
+            "DeleteReservation": "41",
+            "GeneralHelp": "39"
+          },
+          "inputs": [
+            {
+              "id": "7_caseExpression",
+              "name": "caseExpression",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.action}}"
+            }
+          ],
+          "diagram": {
+            "x": 8450,
+            "y": 6982
+          },
+          "convergenceTargetId": "end"
+        },
+        {
+          "id": "8",
+          "code": "PREPARE_VIEW_QUERY",
+          "type": "CODE",
+          "metadata": {
+            "name": "Prepare View Query",
+            "description": "Builds the reservation-details pQuery filter string from the classified request.",
+            "sourceCode": "const r = $context.$nodes.CLASSIFY_REQUEST.$output.result; const q = String.fromCharCode(39); const parts = []; if (r.organizationCode) { parts.push('OrganizationCode=' + q + r.organizationCode + q); } if (r.itemNumber) { parts.push('ItemNumber=' + q + r.itemNumber + q); } if (r.demandSourceTypeId) { parts.push('DemandSourceTypeId=' + q + r.demandSourceTypeId + q); } if (r.demandSourceHeaderNumber) { parts.push('DemandSourceHeaderNumber=' + q + r.demandSourceHeaderNumber + q); } if (r.reservationStatus) { parts.push('ReservationStatus=' + q + r.reservationStatus + q); } if (r.expectedStartDate) { parts.push('ExpectedDate>=' + q + r.expectedStartDate + q); } if (r.expectedEndDate) { parts.push('ExpectedDate<=' + q + r.expectedEndDate + q); } return { pQuery: parts.join(' AND ') };",
+            "returnType": "object"
+          },
+          "outcomes": {
+            "success": "13"
+          },
+          "inputs": [],
+          "diagram": {
+            "x": 9462.5,
+            "y": 7204
+          },
+          "outputSpecification": "{\n  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"result\": {\n      \"type\": \"object\"\n    },\n    \"timeout\": {\n      \"type\": \"boolean\"\n    },\n    \"error\": {\n      \"type\": \"string\"\n    }\n  },\n  \"additionalProperties\": false,\n  \"required\": [\n    \"result\",\n    \"timeout\",\n    \"error\"\n  ]\n}"
+        },
+        {
+          "id": "9",
+          "code": "PREPARE_DEMAND_QUERY",
+          "type": "CODE",
+          "metadata": {
+            "name": "Prepare Demand Query",
+            "sourceCode": "const r = $context.$nodes.CLASSIFY_REQUEST.$output.result;\nconst q = String.fromCharCode(39);\nconst v = $context.$nodes.VALIDATE_ITEM.$output;\nconst itemId = (v && v.items && v.items.length > 0 && v.items[0].ItemId) ? v.items[0].ItemId : '';\nconst parts = [];\nif (r.organizationCode) { parts.push('OrganizationCode=' + q + r.organizationCode + q); }\nif (r.customerName) { parts.push('upper(customerName) like upper(' + q + '%' + r.customerName + '%' + q + ')'); }\nif (r.reservationStatus) { const f = r.demandSourceTypeId === '5' ? 'ReservationStatusMeaning' : 'ReservationStatus'; parts.push(f + '=' + q + r.reservationStatus + q); }\nconst pQuery = parts.join(' AND ');\nconst binds = [];\nif (itemId) { binds.push('BindItemId=' + itemId); }\nif (r.expectedStartDate) { binds.push('BindExpectedStartDate=' + r.expectedStartDate); }\nif (r.expectedEndDate) { binds.push('BindExpectedEndDate=' + r.expectedEndDate); }\nlet pFinder = '';\nif (binds.length > 0) { pFinder = '&finder=filterByItemExpectedDate;' + binds.join(','); }\nconst demandRoute = r.demandSourceTypeId === '5' ? 'WORK_ORDER' : 'ORDER';\nreturn { pQuery: pQuery, pFinder: pFinder, demandRoute: demandRoute, itemId: itemId };",
+            "returnType": "object"
+          },
+          "outcomes": {
+            "success": "42"
+          },
+          "inputs": [],
+          "diagram": {
+            "x": 5675,
+            "y": 7204
+          },
+          "outputSpecification": "{\n  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"result\": {\n      \"type\": \"object\"\n    },\n    \"timeout\": {\n      \"type\": \"boolean\"\n    },\n    \"error\": {\n      \"type\": \"string\"\n    }\n  },\n  \"additionalProperties\": false,\n  \"required\": [\n    \"result\",\n    \"timeout\",\n    \"error\"\n  ]\n}"
+        },
+        {
+          "id": "10",
+          "code": "RESOLVE_DEMAND_HEADER_QUERY",
+          "type": "CODE",
+          "metadata": {
+            "name": "Resolve Demand Header Query",
+            "sourceCode": "const r = $context.$nodes.CLASSIFY_REQUEST.$output.result; const q = String.fromCharCode(39); let pQuery = 'DemandSourceHeaderNumber=' + q + (r.demandSourceHeaderNumber || '') + q; if (r.demandSourceTypeId) { pQuery = pQuery + ' AND DemandSourceTypeId=' + q + r.demandSourceTypeId + q; } return { pQuery: pQuery };",
+            "returnType": "object"
+          },
+          "outcomes": {
+            "success": "16"
+          },
+          "inputs": [],
+          "diagram": {
+            "x": 5000,
+            "y": 7204
+          },
+          "outputSpecification": "{\n  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"result\": {\n      \"type\": \"object\"\n    },\n    \"timeout\": {\n      \"type\": \"boolean\"\n    },\n    \"error\": {\n      \"type\": \"string\"\n    }\n  },\n  \"additionalProperties\": false,\n  \"required\": [\n    \"result\",\n    \"timeout\",\n    \"error\"\n  ]\n}"
+        },
+        {
+          "id": "11",
+          "code": "PREPARE_DELETE_QUERY",
+          "type": "CODE",
+          "metadata": {
+            "name": "Prepare Delete Query",
+            "sourceCode": "const r = $context.$nodes.CLASSIFY_REQUEST.$output.result; const q = String.fromCharCode(39); let pQuery = 'DemandSourceHeaderNumber=' + q + (r.demandSourceHeaderNumber || '') + q; if (r.demandSourceTypeId) { pQuery = pQuery + ' AND DemandSourceTypeId=' + q + r.demandSourceTypeId + q; } return { pQuery: pQuery };",
+            "returnType": "object"
+          },
+          "outcomes": {
+            "success": "24"
+          },
+          "inputs": [],
+          "diagram": {
+            "x": 6350,
+            "y": 7426
+          },
+          "outputSpecification": "{\n  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"result\": {\n      \"type\": \"object\"\n    },\n    \"timeout\": {\n      \"type\": \"boolean\"\n    },\n    \"error\": {\n      \"type\": \"string\"\n    }\n  },\n  \"additionalProperties\": false,\n  \"required\": [\n    \"result\",\n    \"timeout\",\n    \"error\"\n  ]\n}"
+        },
+        {
+          "id": "12",
+          "code": "PREPARE_CREATE_QUERY",
+          "type": "CODE",
+          "metadata": {
+            "name": "Prepare Create Query",
+            "sourceCode": "const r = $context.$nodes.CLASSIFY_REQUEST.$output.result;\nconst q = String.fromCharCode(39);\nconst v = $context.$nodes.VALIDATE_ITEM.$output;\nconst itemId = (v && v.items && v.items.length > 0 && v.items[0].ItemId) ? v.items[0].ItemId : '';\nconst parts = [];\nif (r.organizationCode) { parts.push('OrganizationCode=' + q + r.organizationCode + q); }\nif (r.customerName) { parts.push('upper(customerName) like upper(' + q + '%' + r.customerName + '%' + q + ')'); }\nif (r.reservationStatus) { parts.push('ReservationStatus=' + q + r.reservationStatus + q); }\nconst pQuery = parts.join(' AND ');\nconst binds = [];\nif (itemId) { binds.push('BindItemId=' + itemId); }\nif (r.expectedStartDate) { binds.push('BindExpectedStartDate=' + r.expectedStartDate); }\nif (r.expectedEndDate) { binds.push('BindExpectedEndDate=' + r.expectedEndDate); }\nlet pFinder = '';\nif (binds.length > 0) { pFinder = '&finder=filterByItemExpectedDate;' + binds.join(','); }\nreturn { pQuery: pQuery, pFinder: pFinder, itemId: itemId };",
+            "returnType": "object"
+          },
+          "outcomes": {
+            "success": "21"
+          },
+          "inputs": [],
+          "diagram": {
+            "x": 8675,
+            "y": 7426
+          },
+          "outputSpecification": "{\n  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"result\": {\n      \"type\": \"object\"\n    },\n    \"timeout\": {\n      \"type\": \"boolean\"\n    },\n    \"error\": {\n      \"type\": \"string\"\n    }\n  },\n  \"additionalProperties\": false,\n  \"required\": [\n    \"result\",\n    \"timeout\",\n    \"error\"\n  ]\n}"
+        },
+        {
+          "id": "13",
+          "code": "VIEW_RESERVATIONS",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "View Reservations",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_RESERVATIONDETA",
+            "functionName": "getall_inventoryReservationDetails"
+          },
+          "outcomes": {
+            "success": "29"
+          },
+          "inputs": [
+            {
+              "id": "13_pLimit",
+              "name": "pLimit",
+              "type": "integer",
+              "value": 25
+            },
+            {
+              "id": "13_pOffset",
+              "name": "pOffset",
+              "type": "integer",
+              "value": 0
+            },
+            {
+              "id": "13_pQuery",
+              "name": "pQuery",
+              "type": "string",
+              "value": "{{$context.$nodes.PREPARE_VIEW_QUERY.$output.result.pQuery}}"
+            }
+          ],
+          "diagram": {
+            "x": 9650,
+            "y": 7426
+          }
+        },
+        {
+          "id": "14",
+          "code": "DEMAND_DOCS_WORK_ORDER",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "Demand Docs Work Order",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_INVENTORYWORKORDERDEMANDS",
+            "functionName": "getall_WorkOrderDemandsInOtherOrgs"
+          },
+          "outcomes": {
+            "success": "30"
+          },
+          "inputs": [
+            {
+              "id": "14_pOrgCode",
+              "name": "pOrgCode",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.organizationCode}}"
+            },
+            {
+              "id": "14_pItemId",
+              "name": "pItemId",
+              "type": "string",
+              "value": "{{$context.$nodes.PREPARE_DEMAND_QUERY.$output.result.itemId}}"
+            }
+          ],
+          "diagram": {
+            "x": 5900,
+            "y": 7648
+          },
+          "outputSpecification": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"totalResults\": {\n      \"type\": \"integer\"\n    },\n    \"count\": {\n      \"type\": \"integer\"\n    },\n    \"hasMore\": {\n      \"type\": \"boolean\"\n    },\n    \"limit\": {\n      \"type\": \"integer\"\n    },\n    \"offset\": {\n      \"type\": \"integer\"\n    },\n    \"links\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"href\": {\n            \"type\": \"string\"\n          },\n          \"rel\": {\n            \"type\": \"string\",\n            \"enum\": [\n              \"self\",\n              \"lov\",\n              \"parent\",\n              \"canonical\",\n              \"child\",\n              \"enclosure\",\n              \"action\",\n              \"custom\"\n            ]\n          },\n          \"name\": {\n            \"type\": \"string\"\n          },\n          \"kind\": {\n            \"type\": \"string\",\n            \"enum\": [\n              \"collection\",\n              \"item\",\n              \"describe\",\n              \"other\"\n            ]\n          }\n        },\n        \"additionalProperties\": false\n      }\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"@context\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"key\": {\n                \"type\": \"string\"\n              },\n              \"headers\": {\n                \"type\": \"object\",\n                \"properties\": {\n                  \"ETag\": {\n                    \"type\": \"string\"\n                  }\n                },\n                \"additionalProperties\": false\n              },\n              \"links\": {\n                \"type\": \"array\",\n                \"items\": {\n                  \"type\": \"object\",\n                  \"properties\": {\n                    \"href\": {\n                      \"type\": \"string\"\n                    },\n                    \"rel\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"self\",\n                        \"lov\",\n                        \"parent\",\n                        \"canonical\",\n                        \"child\",\n                        \"enclosure\",\n                        \"action\",\n                        \"custom\"\n                      ]\n                    },\n                    \"name\": {\n                      \"type\": \"string\"\n                    },\n                    \"kind\": {\n                      \"type\": \"string\",\n                      \"enum\": [\n                        \"collection\",\n                        \"item\",\n                        \"describe\",\n                        \"other\"\n                      ]\n                    }\n                  },\n                  \"additionalProperties\": false\n                }\n              }\n            },\n            \"additionalProperties\": false\n          },\n          \"OrganizationId\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigInt\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"OrganizationName\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"OrganizationCode\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"AssemblyItemId\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigInt\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"AssemblyItem\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"WorkOrderId\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigInt\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"WorkOrderNumber\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"DemandProjectId\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigInt\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"DemandProjectNumber\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"DemandTaskId\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigInt\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"DemandTaskNumber\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"TotalLines\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"BigDecimal\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ReservationStatus\": {\n            \"anyOf\": [\n              {\n                \"type\": \"integer\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ReservationStatusMeaning\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          },\n          \"ExpectedDate\": {\n            \"anyOf\": [\n              {\n                \"type\": \"string\",\n                \"format\": \"date\"\n              },\n              {\n                \"type\": \"null\"\n              }\n            ]\n          }\n        },\n        \"additionalProperties\": false\n      }\n    }\n  },\n  \"additionalProperties\": false,\n  \"required\": [\n    \"count\",\n    \"hasMore\",\n    \"limit\",\n    \"offset\",\n    \"links\"\n  ]\n}"
+        },
+        {
+          "id": "15",
+          "code": "DEMAND_DOCS_ORDER",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "Demand Docs Order",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_INVENTORYSTANDA",
+            "functionName": "getall_invOrderReservationStatuses"
+          },
+          "outcomes": {
+            "success": "30"
+          },
+          "inputs": [
+            {
+              "id": "15_pLimit",
+              "name": "pLimit",
+              "type": "integer",
+              "value": 10
+            },
+            {
+              "id": "15_pOffset",
+              "name": "pOffset",
+              "type": "integer",
+              "value": 0
+            },
+            {
+              "id": "15_pQuery",
+              "name": "pQuery",
+              "type": "string",
+              "value": "{{$context.$nodes.PREPARE_DEMAND_QUERY.$output.result.pQuery}}"
+            },
+            {
+              "id": "15_pFinder",
+              "name": "pFinder",
+              "type": "string",
+              "value": "{{$context.$nodes.PREPARE_DEMAND_QUERY.$output.result.pFinder}}"
+            }
+          ],
+          "diagram": {
+            "x": 6800,
+            "y": 7648
+          }
+        },
+        {
+          "id": "16",
+          "code": "RESOLVE_DEMAND_HEADER",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "Resolve Demand Header",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_INVENTORYSTANDA",
+            "functionName": "getall_invOrderReservationStatuses"
+          },
+          "outcomes": {
+            "success": "47"
+          },
+          "inputs": [
+            {
+              "id": "16_pLimit",
+              "name": "pLimit",
+              "type": "integer",
+              "value": 1
+            },
+            {
+              "id": "16_pOffset",
+              "name": "pOffset",
+              "type": "integer",
+              "value": 0
+            },
+            {
+              "id": "16_pQuery",
+              "name": "pQuery",
+              "type": "string",
+              "value": "{{$context.$nodes.RESOLVE_DEMAND_HEADER_QUERY.$output.result.pQuery}}"
+            }
+          ],
+          "diagram": {
+            "x": 5000,
+            "y": 7426
+          }
+        },
+        {
+          "id": "17",
+          "code": "DEMAND_LINES",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "Demand Lines",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_RESERVATIONSDOC",
+            "functionName": "getall_reservationsByDocumentLines"
+          },
+          "outcomes": {
+            "success": "31"
+          },
+          "inputs": [
+            {
+              "id": "17_pLimit",
+              "name": "pLimit",
+              "type": "integer",
+              "value": 10
+            },
+            {
+              "id": "17_pOffset",
+              "name": "pOffset",
+              "type": "integer",
+              "value": 0
+            },
+            {
+              "id": "17_pDemandSourceTypeId",
+              "name": "pDemandSourceTypeId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceTypeId}}"
+            },
+            {
+              "id": "17_pDemandSourceHeaderId",
+              "name": "pDemandSourceHeaderId",
+              "type": "string",
+              "value": "{{$context.$nodes.RESOLVE_DEMAND_HEADER.$output.items[0].DemandSourceHeaderId}}"
+            },
+            {
+              "id": "17_pOrganizationCode",
+              "name": "pOrganizationCode",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.organizationCode}}"
+            }
+          ],
+          "diagram": {
+            "x": 5000,
+            "y": 7870
+          }
+        },
+        {
+          "id": "18",
+          "code": "SUPPLY_SOURCES",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "Supply Sources",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_INVENTORYSUPPLY",
+            "functionName": "getall_availableToReserveByDocumentTypes"
+          },
+          "outcomes": {
+            "success": "32"
+          },
+          "inputs": [
+            {
+              "id": "18_pInventoryItemId",
+              "name": "pInventoryItemId",
+              "type": "string",
+              "value": "{{$context.$nodes.VALIDATE_ITEM.$output.items[0].ItemId}}"
+            },
+            {
+              "id": "18_pOrganizationId",
+              "name": "pOrganizationId",
+              "type": "string",
+              "value": "{{$context.$nodes.VALIDATE_ORGANIZATION.$output.items[0].OrganizationId}}"
+            },
+            {
+              "id": "18_pOrderedUOM",
+              "name": "pOrderedUOM",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.reservationUOMCode}}"
+            }
+          ],
+          "diagram": {
+            "x": 11450,
+            "y": 7204
+          }
+        },
+        {
+          "id": "19",
+          "code": "SUPPLY_LINES",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "Supply Lines",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_SUPPLYDOCUMENTD",
+            "functionName": "getall_supplyLineDetailsByTypes"
+          },
+          "outcomes": {
+            "success": "33"
+          },
+          "inputs": [
+            {
+              "id": "19_pLimit",
+              "name": "pLimit",
+              "type": "integer",
+              "value": 10
+            },
+            {
+              "id": "19_pOffset",
+              "name": "pOffset",
+              "type": "integer",
+              "value": 0
+            },
+            {
+              "id": "19_pSupplySourceTypeId",
+              "name": "pSupplySourceTypeId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.supplySourceTypeId}}"
+            },
+            {
+              "id": "19_pInventoryItemId",
+              "name": "pInventoryItemId",
+              "type": "string",
+              "value": "{{$context.$nodes.VALIDATE_ITEM.$output.items[0].ItemId}}"
+            },
+            {
+              "id": "19_pOrganizationId",
+              "name": "pOrganizationId",
+              "type": "string",
+              "value": "{{$context.$nodes.VALIDATE_ORGANIZATION.$output.items[0].OrganizationId}}"
+            },
+            {
+              "id": "19_pOrderedUOM",
+              "name": "pOrderedUOM",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.reservationUOMCode}}"
+            }
+          ],
+          "diagram": {
+            "x": 11900,
+            "y": 7204
+          }
+        },
+        {
+          "id": "20",
+          "code": "CREATE_SINGLE",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "Create Single",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_RESERVATIONSMAI",
+            "functionName": "create_inventoryReservations"
+          },
+          "outcomes": {
+            "success": "26"
+          },
+          "inputs": [
+            {
+              "id": "20_pOrganizationCode",
+              "name": "pOrganizationCode",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.organizationCode}}"
+            },
+            {
+              "id": "20_pItemNumber",
+              "name": "pItemNumber",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.itemNumber}}"
+            },
+            {
+              "id": "20_pDemandSourceTypeId",
+              "name": "pDemandSourceTypeId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceTypeId}}"
+            },
+            {
+              "id": "20_pDemandSourceHeaderId",
+              "name": "pDemandSourceHeaderId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceHeaderId}}"
+            },
+            {
+              "id": "20_pDemandSourceHeaderNumber",
+              "name": "pDemandSourceHeaderNumber",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceHeaderNumber}}"
+            },
+            {
+              "id": "20_pDemandSourceLineId",
+              "name": "pDemandSourceLineId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceLineId}}"
+            },
+            {
+              "id": "20_pDemandSourceLineNumber",
+              "name": "pDemandSourceLineNumber",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceLineNumber}}"
+            },
+            {
+              "id": "20_pSupplySourceTypeId",
+              "name": "pSupplySourceTypeId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.supplySourceTypeId}}"
+            },
+            {
+              "id": "20_pSupplySourceHeaderNumber",
+              "name": "pSupplySourceHeaderNumber",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.supplySourceHeaderNumber}}"
+            },
+            {
+              "id": "20_pSupplySourceLineNumber",
+              "name": "pSupplySourceLineNumber",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.supplySourceLineNumber}}"
+            },
+            {
+              "id": "20_pReservationQuantity",
+              "name": "pReservationQuantity",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.reservationQuantity}}"
+            },
+            {
+              "id": "20_pReservationUOMCode",
+              "name": "pReservationUOMCode",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.reservationUOMCode}}"
+            }
+          ],
+          "diagram": {
+            "x": 9200,
+            "y": 7426
+          }
+        },
+        {
+          "id": "21",
+          "code": "CREATE_DEMAND_DOCS",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "Create Demand Docs",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_INVENTORYSTANDA",
+            "functionName": "getall_invOrderReservationStatuses"
+          },
+          "outcomes": {
+            "success": "22"
+          },
+          "inputs": [
+            {
+              "id": "21_pLimit",
+              "name": "pLimit",
+              "type": "integer",
+              "value": 10
+            },
+            {
+              "id": "21_pOffset",
+              "name": "pOffset",
+              "type": "integer",
+              "value": 0
+            },
+            {
+              "id": "21_pQuery",
+              "name": "pQuery",
+              "type": "string",
+              "value": "{{$context.$nodes.PREPARE_CREATE_QUERY.$output.result.pQuery}}"
+            },
+            {
+              "id": "21_pFinder",
+              "name": "pFinder",
+              "type": "string",
+              "value": "{{$context.$nodes.PREPARE_CREATE_QUERY.$output.result.pFinder}}"
+            }
+          ],
+          "diagram": {
+            "x": 8675,
+            "y": 7648
+          }
+        },
+        {
+          "id": "22",
+          "code": "CREATE_DEMAND_LINES",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "Create Demand Lines",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_RESERVATIONSDOC",
+            "functionName": "getall_reservationsByDocumentLines"
+          },
+          "outcomes": {
+            "success": "43"
+          },
+          "inputs": [
+            {
+              "id": "22_pLimit",
+              "name": "pLimit",
+              "type": "integer",
+              "value": 10
+            },
+            {
+              "id": "22_pOffset",
+              "name": "pOffset",
+              "type": "integer",
+              "value": 0
+            },
+            {
+              "id": "22_pDemandSourceTypeId",
+              "name": "pDemandSourceTypeId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceTypeId}}"
+            },
+            {
+              "id": "22_pDemandSourceHeaderId",
+              "name": "pDemandSourceHeaderId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceHeaderId}}"
+            },
+            {
+              "id": "22_pOrganizationCode",
+              "name": "pOrganizationCode",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.organizationCode}}"
+            }
+          ],
+          "diagram": {
+            "x": 8675,
+            "y": 7870
+          }
+        },
+        {
+          "id": "23",
+          "code": "UPDATE_RESERVATION",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "Update Reservation",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_RESERVATIONSMAI",
+            "functionName": "update_inventoryReservations"
+          },
+          "outcomes": {
+            "success": "28"
+          },
+          "inputs": [
+            {
+              "id": "23_pReservationId",
+              "name": "pReservationId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.reservationId}}"
+            },
+            {
+              "id": "23_pReservationQuantity",
+              "name": "pReservationQuantity",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.reservationQuantity}}"
+            },
+            {
+              "id": "23_pReservationUOMCode",
+              "name": "pReservationUOMCode",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.reservationUOMCode}}"
+            }
+          ],
+          "diagram": {
+            "x": 9912.5,
+            "y": 7204
+          }
+        },
+        {
+          "id": "24",
+          "code": "RESOLVE_DELETE_ID",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "Resolve Delete Id",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_RESERVATIONDETA",
+            "functionName": "getall_inventoryReservationDetails"
+          },
+          "outcomes": {
+            "success": "48"
+          },
+          "inputs": [
+            {
+              "id": "24_pLimit",
+              "name": "pLimit",
+              "type": "integer",
+              "value": 1
+            },
+            {
+              "id": "24_pOffset",
+              "name": "pOffset",
+              "type": "integer",
+              "value": 0
+            },
+            {
+              "id": "24_pQuery",
+              "name": "pQuery",
+              "type": "string",
+              "value": "{{$context.$nodes.PREPARE_DELETE_QUERY.$output.result.pQuery}}"
+            }
+          ],
+          "diagram": {
+            "x": 6350,
+            "y": 7648
+          }
+        },
+        {
+          "id": "25",
+          "code": "DELETE_RESERVATION",
+          "type": "BO_FUNCTION",
+          "metadata": {
+            "name": "Delete Reservation",
+            "businessObjectCode": "ORA_SCM_INVENTORYM_RESERVATIONSMAI",
+            "functionName": "delete_inventoryReservations"
+          },
+          "outcomes": {
+            "success": "37"
+          },
+          "inputs": [
+            {
+              "id": "25_pReservationId",
+              "name": "pReservationId",
+              "type": "string",
+              "value": "{{$context.$nodes.RESOLVE_DELETE_ID.$output.items[0].ReservationId}}"
+            }
+          ],
+          "diagram": {
+            "x": 6125,
+            "y": 8092
+          }
+        },
+        {
+          "id": "26",
+          "code": "CREATE_LINK_SINGLE",
+          "type": "TOOL",
+          "metadata": {
+            "name": "Create Link Single",
+            "toolCode": "ORA_INVENTORY_MANAGE_RESERVATIONS_TOOL"
+          },
+          "outcomes": {
+            "success": "34"
+          },
+          "inputs": [
+            {
+              "id": "26_pOrganizationId",
+              "name": "pOrganizationId",
+              "type": "string",
+              "value": "{{$context.$nodes.VALIDATE_ORGANIZATION.$output.items[0].OrganizationId}}"
+            },
+            {
+              "id": "26_pSupplySourceTypeId",
+              "name": "pSupplySourceTypeId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.supplySourceTypeId}}"
+            },
+            {
+              "id": "26_pDemandSourceTypeId",
+              "name": "pDemandSourceTypeId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceTypeId}}"
+            },
+            {
+              "id": "26_pDemandSourceHeaderId",
+              "name": "pDemandSourceHeaderId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceHeaderId}}"
+            }
+          ],
+          "diagram": {
+            "x": 9200,
+            "y": 7648
+          }
+        },
+        {
+          "id": "27",
+          "code": "CREATE_LINK",
+          "type": "TOOL",
+          "metadata": {
+            "name": "Create Link",
+            "toolCode": "ORA_INVENTORY_MANAGE_RESERVATIONS_TOOL"
+          },
+          "outcomes": {
+            "success": "35"
+          },
+          "inputs": [
+            {
+              "id": "27_pOrganizationId",
+              "name": "pOrganizationId",
+              "type": "string",
+              "value": "{{$context.$nodes.VALIDATE_ORGANIZATION.$output.items[0].OrganizationId}}"
+            },
+            {
+              "id": "27_pSupplySourceTypeId",
+              "name": "pSupplySourceTypeId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.supplySourceTypeId}}"
+            },
+            {
+              "id": "27_pDemandSourceTypeId",
+              "name": "pDemandSourceTypeId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceTypeId}}"
+            },
+            {
+              "id": "27_pDemandSourceHeaderId",
+              "name": "pDemandSourceHeaderId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceHeaderId}}"
+            }
+          ],
+          "diagram": {
+            "x": 8675,
+            "y": 8812
+          }
+        },
+        {
+          "id": "28",
+          "code": "UPDATE_LINK",
+          "type": "TOOL",
+          "metadata": {
+            "name": "Update Link",
+            "toolCode": "ORA_INVENTORY_MANAGE_RESERVATIONS_TOOL"
+          },
+          "outcomes": {
+            "success": "36"
+          },
+          "inputs": [
+            {
+              "id": "28_pOrganizationId",
+              "name": "pOrganizationId",
+              "type": "string",
+              "value": "{{$context.$nodes.VALIDATE_ORGANIZATION.$output.items[0].OrganizationId}}"
+            },
+            {
+              "id": "28_pSupplySourceTypeId",
+              "name": "pSupplySourceTypeId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.supplySourceTypeId}}"
+            },
+            {
+              "id": "28_pDemandSourceTypeId",
+              "name": "pDemandSourceTypeId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceTypeId}}"
+            },
+            {
+              "id": "28_pDemandSourceHeaderId",
+              "name": "pDemandSourceHeaderId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceHeaderId}}"
+            }
+          ],
+          "diagram": {
+            "x": 10100,
+            "y": 7426
+          }
+        },
+        {
+          "id": "29",
+          "code": "FORMAT_RESERVATIONS",
+          "type": "LLM",
+          "metadata": {
+            "name": "Format Reservations",
+            "chatHistoryEnabled": false,
+            "answerInUserLanguage": true
+          },
+          "outcomes": {
+            "success": "end"
+          },
+          "inputs": [
+            {
+              "id": "29_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You render inventory reservation details into a clean user-facing reply. Show only these columns: Demand Document Type, Demand Document Number, Demand Document Line Number, Reservation Quantity, Demand Quantity, Expected Date, Item Number, Organization Code, and Reservation UOM Code. Never reveal any internal ID fields such as organization ID, item ID, or document IDs."
+            },
+            {
+              "id": "29_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Render the reservation details for the user. Data: {{$context.$nodes.VIEW_RESERVATIONS.$output}}. Return a concise, friendly summary."
+            }
+          ],
+          "diagram": {
+            "x": 9650,
+            "y": 7648
+          }
+        },
+        {
+          "id": "30",
+          "code": "FORMAT_DEMAND_DOCS",
+          "type": "LLM",
+          "metadata": {
+            "name": "Format Demand Docs",
+            "chatHistoryEnabled": false,
+            "answerInUserLanguage": true
+          },
+          "outcomes": {
+            "success": "end"
+          },
+          "inputs": [
+            {
+              "id": "30_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You summarize demand document search results and suggest next steps. Show document type, document number, expected date, total lines, and reservation status. Never reveal internal primary-key IDs."
+            },
+            {
+              "id": "30_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Summarize the demand documents for the user. Work order results: {{$context.$nodes.DEMAND_DOCS_WORK_ORDER.$output}}. Order results: {{$context.$nodes.DEMAND_DOCS_ORDER.$output}}. Use whichever result list is non-empty, then propose next steps such as drilling into line details or reserving supply."
+            }
+          ],
+          "diagram": {
+            "x": 5675,
+            "y": 7870
+          }
+        },
+        {
+          "id": "31",
+          "code": "FORMAT_DEMAND_LINES",
+          "type": "LLM",
+          "metadata": {
+            "name": "Format Demand Lines",
+            "chatHistoryEnabled": false,
+            "answerInUserLanguage": true
+          },
+          "outcomes": {
+            "success": "end"
+          },
+          "inputs": [
+            {
+              "id": "31_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You render demand document line details. Show demand document number, line number, item number, requested quantity, reserved quantity, due date, and reservation status. Never reveal internal IDs."
+            },
+            {
+              "id": "31_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Render the demand document line details. Data: {{$context.$nodes.DEMAND_LINES.$output}}."
+            }
+          ],
+          "diagram": {
+            "x": 5000,
+            "y": 8092
+          }
+        },
+        {
+          "id": "32",
+          "code": "FORMAT_SUPPLY_SOURCES",
+          "type": "LLM",
+          "metadata": {
+            "name": "Format Supply Sources",
+            "chatHistoryEnabled": false,
+            "answerInUserLanguage": true
+          },
+          "outcomes": {
+            "success": "end"
+          },
+          "inputs": [
+            {
+              "id": "32_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You render available-to-reserve supply source options. Show source type meaning, available-to-reserve quantity, and expected delivery date."
+            },
+            {
+              "id": "32_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Render the supply source options for the user. Data: {{$context.$nodes.SUPPLY_SOURCES.$output}}."
+            }
+          ],
+          "diagram": {
+            "x": 11450,
+            "y": 7426
+          }
+        },
+        {
+          "id": "33",
+          "code": "FORMAT_SUPPLY_LINES",
+          "type": "LLM",
+          "metadata": {
+            "name": "Format Supply Lines",
+            "chatHistoryEnabled": false,
+            "answerInUserLanguage": true
+          },
+          "outcomes": {
+            "success": "end"
+          },
+          "inputs": [
+            {
+              "id": "33_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You render supply document line details. Show supply source type, header number, line number, item number, total available-to-reserve, reserved quantity, expected delivery date, and reservation status."
+            },
+            {
+              "id": "33_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Render the supply document line details. Data: {{$context.$nodes.SUPPLY_LINES.$output}}."
+            }
+          ],
+          "diagram": {
+            "x": 11900,
+            "y": 7426
+          }
+        },
+        {
+          "id": "34",
+          "code": "FORMAT_CREATE_SINGLE",
+          "type": "LLM",
+          "metadata": {
+            "name": "Format Create Single",
+            "chatHistoryEnabled": false,
+            "answerInUserLanguage": true
+          },
+          "outcomes": {
+            "success": "end"
+          },
+          "inputs": [
+            {
+              "id": "34_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You summarize a single inventory reservation creation result and, when a deep link is provided, include it as a Manage Reservations link."
+            },
+            {
+              "id": "34_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Render the reservation creation result. Create result: {{$context.$nodes.CREATE_SINGLE.$output}}. Manage Reservations deep link: {{$context.$nodes.CREATE_LINK_SINGLE.$output}}."
+            }
+          ],
+          "diagram": {
+            "x": 9200,
+            "y": 7870
+          }
+        },
+        {
+          "id": "35",
+          "code": "FORMAT_CREATE_AUTO",
+          "type": "LLM",
+          "metadata": {
+            "name": "Format Create Auto",
+            "chatHistoryEnabled": false,
+            "answerInUserLanguage": true
+          },
+          "outcomes": {
+            "success": "end"
+          },
+          "inputs": [
+            {
+              "id": "35_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You summarize a batch reservation creation, report which lines were created, and, when on-hand supply was insufficient, point the user to the demand documents page."
+            },
+            {
+              "id": "35_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Render the automatic reservation creation summary. Created lines: {{$context.$nodes.CREATE_EACH_LINE.$output}}. Manage Reservations deep link: {{$context.$nodes.CREATE_LINK.$output}}. If any demand line could not be reserved due to missing on-hand supply, suggest opening demand documents."
+            }
+          ],
+          "diagram": {
+            "x": 8675,
+            "y": 9034
+          }
+        },
+        {
+          "id": "36",
+          "code": "FORMAT_UPDATE",
+          "type": "LLM",
+          "metadata": {
+            "name": "Format Update",
+            "chatHistoryEnabled": false,
+            "answerInUserLanguage": true
+          },
+          "outcomes": {
+            "success": "end"
+          },
+          "inputs": [
+            {
+              "id": "36_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You summarize a reservation update result and include the Manage Reservations deep link when provided."
+            },
+            {
+              "id": "36_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Render the reservation update result. Update result: {{$context.$nodes.UPDATE_RESERVATION.$output}}. Manage Reservations deep link: {{$context.$nodes.UPDATE_LINK.$output}}."
+            }
+          ],
+          "diagram": {
+            "x": 10100,
+            "y": 7648
+          }
+        },
+        {
+          "id": "37",
+          "code": "FORMAT_DELETE",
+          "type": "LLM",
+          "metadata": {
+            "name": "Format Delete",
+            "chatHistoryEnabled": false,
+            "answerInUserLanguage": true
+          },
+          "outcomes": {
+            "success": "end"
+          },
+          "inputs": [
+            {
+              "id": "37_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You confirm a reservation deletion result to the user."
+            },
+            {
+              "id": "37_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Render the reservation deletion result. Data: {{$context.$nodes.DELETE_RESERVATION.$output}}."
+            }
+          ],
+          "diagram": {
+            "x": 6125,
+            "y": 8314
+          }
+        },
+        {
+          "id": "38",
+          "code": "FORMAT_DELETE_CANCEL",
+          "type": "LLM",
+          "metadata": {
+            "name": "Format Delete Cancel",
+            "chatHistoryEnabled": false,
+            "answerInUserLanguage": true
+          },
+          "outcomes": {
+            "success": "end"
+          },
+          "inputs": [
+            {
+              "id": "38_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You are collecting deletion confirmation from the user before proceeding."
+            },
+            {
+              "id": "38_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Ask the user to confirm deletion of the reservation by replying Yes or No. Keep the question short and clear."
+            }
+          ],
+          "diagram": {
+            "x": 6800,
+            "y": 7426
+          }
+        },
+        {
+          "id": "39",
+          "code": "GENERAL_HELP",
+          "type": "LLM",
+          "metadata": {
+            "name": "General Help",
+            "chatHistoryEnabled": false,
+            "answerInUserLanguage": true
+          },
+          "outcomes": {
+            "success": "end"
+          },
+          "inputs": [
+            {
+              "id": "39_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You are a helpful inventory reservations assistant. Explain the available actions and how to ask for them."
+            },
+            {
+              "id": "39_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Render the assistant welcome and help message. List supported actions: view reservations, fetch demand documents, fetch demand document line details, fetch supply documents, fetch supply document line details, create a reservation, auto reserve, update a reservation, and delete a reservation."
+            }
+          ],
+          "diagram": {
+            "x": 10362.5,
+            "y": 7204
+          }
+        },
+        {
+          "id": "40",
+          "code": "CREATE_MODE_CHECK",
+          "type": "CONDITION",
+          "metadata": {
+            "name": "Create Mode Check"
+          },
+          "outcomes": {
+            "true": "20",
+            "false": "12"
+          },
+          "inputs": [
+            {
+              "id": "40_condition",
+              "name": "condition",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.reservationMode === 'single'}}"
+            }
+          ],
+          "diagram": {
+            "x": 9012.5,
+            "y": 7204
+          },
+          "convergenceTargetId": "end"
+        },
+        {
+          "id": "41",
+          "code": "CHECK_DELETE_CONFIRM",
+          "type": "CONDITION",
+          "metadata": {
+            "name": "Check Delete Confirm"
+          },
+          "outcomes": {
+            "true": "11",
+            "false": "38"
+          },
+          "inputs": [
+            {
+              "id": "41_condition",
+              "name": "condition",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.deleteConfirmed === true}}"
+            }
+          ],
+          "diagram": {
+            "x": 6575,
+            "y": 7204
+          },
+          "convergenceTargetId": "end"
+        },
+        {
+          "id": "42",
+          "code": "DEMAND_TYPE_ROUTER",
+          "type": "SWITCH",
+          "metadata": {
+            "name": "Demand Type Router"
+          },
+          "outcomes": {
+            "success": "30",
+            "WORK_ORDER": "14",
+            "ORDER": "15"
+          },
+          "inputs": [
+            {
+              "id": "42_caseExpression",
+              "name": "caseExpression",
+              "type": "string",
+              "value": "{{$context.$nodes.PREPARE_DEMAND_QUERY.$output.result.demandRoute}}"
+            }
+          ],
+          "diagram": {
+            "x": 5675,
+            "y": 7426
+          },
+          "convergenceTargetId": "30"
+        },
+        {
+          "id": "43",
+          "code": "SELECT_ELIGIBLE_LINES",
+          "type": "CODE",
+          "metadata": {
+            "name": "Select Eligible Lines",
+            "sourceCode": "const items = $context.$nodes.CREATE_DEMAND_LINES.$output.items || []; const lines = items.filter(function (it) { const requested = Number(it.RequestedQuantity || 0); const availableRaw = it.AvailableToReserveOnhand != null ? it.AvailableToReserveOnhand : (it.ReservedQuantity != null ? it.ReservedQuantity : 0); const available = Number(availableRaw || 0); return requested > 0 && available >= requested; }); return { lines: lines };",
+            "returnType": "object"
+          },
+          "outcomes": {
+            "success": "44"
+          },
+          "inputs": [],
+          "diagram": {
+            "x": 8675,
+            "y": 8092
+          },
+          "outputSpecification": "{\n  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"result\": {\n      \"type\": \"object\"\n    },\n    \"timeout\": {\n      \"type\": \"boolean\"\n    },\n    \"error\": {\n      \"type\": \"string\"\n    }\n  },\n  \"additionalProperties\": false,\n  \"required\": [\n    \"result\",\n    \"timeout\",\n    \"error\"\n  ]\n}"
+        },
+        {
+          "id": "44",
+          "code": "CREATE_EACH_LINE",
+          "type": "LOOP",
+          "metadata": {
+            "name": "Create Each Line",
+            "loopType": "PARALLEL",
+            "dataPipeline": {
+              "rootNode": "start_44",
+              "pipelineNodes": [
+                {
+                  "id": "start_44",
+                  "code": "START",
+                  "type": "START",
+                  "metadata": {
+                    "name": "Start",
+                    "description": "Start of loop pipeline"
+                  },
+                  "outcomes": {
+                    "success": "create_one"
+                  },
+                  "inputs": [],
+                  "diagram": {
+                    "x": 8675,
+                    "y": 8404
+                  }
+                },
+                {
+                  "id": "create_one",
+                  "code": "CREATE_ONE",
+                  "type": "BO_FUNCTION",
+                  "metadata": {
+                    "name": "Create One",
+                    "businessObjectCode": "ORA_SCM_INVENTORYM_RESERVATIONSMAI",
+                    "functionName": "create_inventoryReservations"
+                  },
+                  "outcomes": {
+                    "success": "end_44"
+                  },
+                  "inputs": [
+                    {
+                      "id": "create_one_pOrganizationCode",
+                      "name": "pOrganizationCode",
+                      "type": "string",
+                      "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.organizationCode}}"
+                    },
+                    {
+                      "id": "create_one_pItemNumber",
+                      "name": "pItemNumber",
+                      "type": "string",
+                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.ItemNumber}}"
+                    },
+                    {
+                      "id": "create_one_pDemandSourceTypeId",
+                      "name": "pDemandSourceTypeId",
+                      "type": "string",
+                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceTypeId}}"
+                    },
+                    {
+                      "id": "create_one_pDemandSourceHeaderId",
+                      "name": "pDemandSourceHeaderId",
+                      "type": "string",
+                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceHeaderId}}"
+                    },
+                    {
+                      "id": "create_one_pDemandSourceHeaderNumber",
+                      "name": "pDemandSourceHeaderNumber",
+                      "type": "string",
+                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceHeaderNumber}}"
+                    },
+                    {
+                      "id": "create_one_pDemandSourceLineId",
+                      "name": "pDemandSourceLineId",
+                      "type": "string",
+                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceLineId}}"
+                    },
+                    {
+                      "id": "create_one_pDemandSourceLineNumber",
+                      "name": "pDemandSourceLineNumber",
+                      "type": "string",
+                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceLineNumber}}"
+                    },
+                    {
+                      "id": "create_one_pReservationQuantity",
+                      "name": "pReservationQuantity",
+                      "type": "string",
+                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.RequestedQuantity}}"
+                    }
+                  ],
+                  "diagram": {
+                    "x": 8675,
+                    "y": 8555
+                  }
+                },
+                {
+                  "id": "end_44",
+                  "code": "END",
+                  "type": "END",
+                  "metadata": {
+                    "name": "End",
+                    "description": "End of loop pipeline"
+                  },
+                  "outcomes": {},
+                  "inputs": [],
+                  "diagram": {
+                    "x": 5000,
+                    "y": 5440
+                  }
+                }
+              ]
+            }
+          },
+          "outcomes": {
+            "success": "27"
+          },
+          "inputs": [
+            {
+              "id": "44_collection",
+              "name": "collection",
+              "type": "string",
+              "value": "{{$context.$nodes.SELECT_ELIGIBLE_LINES.$output.result.lines}}"
+            }
+          ],
+          "diagram": {
+            "x": 8525,
+            "y": 8314,
+            "width": 600,
+            "height": 348
+          }
+        },
+        {
+          "id": "45",
+          "code": "CHECK_ORGANIZATION_FOUND",
+          "type": "CONDITION",
+          "metadata": {
+            "name": "Check Organization Found"
+          },
+          "outcomes": {
+            "true": "5",
+            "false": "49"
+          },
+          "inputs": [
+            {
+              "id": "45_condition",
+              "name": "condition",
+              "type": "string",
+              "value": "{{!!$context.$nodes.VALIDATE_ORGANIZATION.$output.items?.[0]?.OrganizationId}}"
+            }
+          ],
+          "diagram": {
+            "x": 9350,
+            "y": 6094
+          },
+          "convergenceTargetId": "end"
+        },
+        {
+          "id": "46",
+          "code": "CHECK_ITEM_FOUND",
+          "type": "CONDITION",
+          "metadata": {
+            "name": "Check Item Found"
+          },
+          "outcomes": {
+            "true": "7",
+            "false": "50"
+          },
+          "inputs": [
+            {
+              "id": "46_condition",
+              "name": "condition",
+              "type": "string",
+              "value": "{{!!$context.$nodes.VALIDATE_ITEM.$output.items?.[0]?.ItemId}}"
+            }
+          ],
+          "diagram": {
+            "x": 8675,
+            "y": 6760
+          },
+          "convergenceTargetId": "end"
+        },
+        {
+          "id": "47",
+          "code": "CHECK_DEMAND_HEADER_FOUND",
+          "type": "CONDITION",
+          "metadata": {
+            "name": "Check Demand Header Found"
+          },
+          "outcomes": {
+            "true": "17",
+            "false": "51"
+          },
+          "inputs": [
+            {
+              "id": "47_condition",
+              "name": "condition",
+              "type": "string",
+              "value": "{{!!$context.$nodes.RESOLVE_DEMAND_HEADER.$output.items?.[0]?.DemandSourceHeaderId}}"
+            }
+          ],
+          "diagram": {
+            "x": 5000,
+            "y": 7648
+          },
+          "convergenceTargetId": "end"
+        },
+        {
+          "id": "48",
+          "code": "CHECK_DELETE_ID_FOUND",
+          "type": "CONDITION",
+          "metadata": {
+            "name": "Check Delete Id Found"
+          },
+          "outcomes": {
+            "true": "25",
+            "false": "51"
+          },
+          "inputs": [
+            {
+              "id": "48_condition",
+              "name": "condition",
+              "type": "string",
+              "value": "{{!!$context.$nodes.RESOLVE_DELETE_ID.$output.items?.[0]?.ReservationId}}"
+            }
+          ],
+          "diagram": {
+            "x": 6350,
+            "y": 7870
+          },
+          "convergenceTargetId": "end"
+        },
+        {
+          "id": "49",
+          "code": "FORMAT_INVALID_ORG",
+          "type": "LLM",
+          "metadata": {
+            "name": "Format Invalid Org",
+            "chatHistoryEnabled": true,
+            "answerInUserLanguage": true
+          },
+          "outcomes": {
+            "success": "end"
+          },
+          "inputs": [
+            {
+              "id": "49_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Tell the user the organization could not be found and ask them to provide a valid Organization Code or Name. Keep it to 1-2 sentences. Return only the message text."
+            },
+            {
+              "id": "49_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You are an inventory reservations assistant. Reply in the user's language."
+            }
+          ],
+          "diagram": {
+            "x": 9575,
+            "y": 6316
+          }
+        },
+        {
+          "id": "50",
+          "code": "FORMAT_INVALID_ITEM",
+          "type": "LLM",
+          "metadata": {
+            "name": "Format Invalid Item",
+            "chatHistoryEnabled": true,
+            "answerInUserLanguage": true
+          },
+          "outcomes": {
+            "success": "end"
+          },
+          "inputs": [
+            {
+              "id": "50_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Tell the user the item could not be found and ask them to provide a valid Item Number or Name. Keep it to 1-2 sentences. Return only the message text."
+            },
+            {
+              "id": "50_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You are an inventory reservations assistant. Reply in the user's language."
+            }
+          ],
+          "diagram": {
+            "x": 10700,
+            "y": 6982
+          }
+        },
+        {
+          "id": "51",
+          "code": "FORMAT_NO_RECORD",
+          "type": "LLM",
+          "metadata": {
+            "name": "Format No Record",
+            "chatHistoryEnabled": true,
+            "answerInUserLanguage": true
+          },
+          "outcomes": {
+            "success": "end"
+          },
+          "inputs": [
+            {
+              "id": "51_prompt",
+              "name": "prompt",
+              "type": "string",
+              "value": "Tell the user that no matching document or reservation was found for the reference they gave, and suggest refining the search or providing a different document number. Keep it short. Return only the message text."
+            },
+            {
+              "id": "51_systemPrompt",
+              "name": "systemPrompt",
+              "type": "string",
+              "value": "You are an inventory reservations assistant. Reply in the user's language."
+            }
+          ],
+          "diagram": {
+            "x": 6575,
+            "y": 8092
+          }
+        },
+        {
+          "id": "end",
+          "code": "END",
+          "type": "END",
+          "metadata": {
+            "name": "End",
+            "description": "End of data pipeline"
+          },
+          "outcomes": {},
+          "inputs": [],
+          "diagram": {
+            "x": 5000,
+            "y": 5220
+          }
+        }
+      ],
+      "rootNode": "start",
+      "variables": [],
+      "errorHandlers": []
+    },
+    "modelConfiguration": null,
+    "humanApprovalFlag": false,
+    "waitFlag": false,
+    "triggers": [
+      {
+        "type": "REST",
+        "inputs": []
+      }
+    ],
+    "deletedTriggerTypes": [],
+    "answerInUserLanguage": false,
+    "userLanguagePrompt": "",
+    "chatExpTPFileUploadEnabledFlag": false,
+    "chatExpThirdPartyDetails": [],
+    "diagram": {
+      "orientation": "vertical",
+      "commentNodes": []
+    },
+    "defaultModelConfiguration": "ORA_MODEL_CONFIG_PREMIUM_OPEN_AI_GPT_4_1_MINI"
+  },
+  "status": "DRAFT",
+  "version": 88582525,
+  "family": "SCM",
+  "product": "INVENTORY_MANAGEMENT",
+  "ownerName": null,
+  "customFlag": false,
+  "seededFlag": false,
+  "isTemplate": false,
+  "hiddenFlag": false,
+  "useCaseId": "NA",
+  "accessModifier": "public",
+  "architecture": "data_pipeline",
+  "aiAppsCompatibleFlag": false,
+  "followupEnabledFlag": false,
+  "header": {
+    "ETag": "\"6\""
+  }
+}

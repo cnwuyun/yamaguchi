@@ -1,0 +1,1297 @@
+{
+  "supportedObjectId": "100002240134922",
+  "$context": {
+    "etag": "1"
+  },
+  "name": "Reservations Maintenance BO",
+  "description": "A business object to create, update or delete reservations based on details like item, inventory location details, supply document details or demand document details in the primary and secondary units of measure.",
+  "objectCode": "ORA_SCM_INVENTORYM_RESERVATIONSMAI",
+  "family": "SCM",
+  "product": "INVENTORY_MANAGEMENT",
+  "objectSource": "ADF_BC",
+  "restResourcePath": "/fscmRestApi/resources/latest/inventoryReservations",
+  "restResourceIdentifier": "-1",
+  "seededFlag": true,
+  "mandatoryFlag": false,
+  "objectProperties": {
+    "jsonSchemaName": "supportedObjectProperties",
+    "jsonSchemaVersion": 1,
+    "tools": [
+      {
+        "name": "delete_inventoryReservations",
+        "description": "Delete one reservation",
+        "operationType": "POST",
+        "resourcePath": "/fscmRestApi/resources/latest/inventoryReservations/{pReservationId}",
+        "resourceType": "ADF_BC_FIXED_QUERY",
+        "bodyTemplate": "{}",
+        "useNativeAuthentication": true,
+        "type": "BUS_OBJECT",
+        "parameterDefinitions": [
+          {
+            "name": "pReservationId",
+            "dataType": "string",
+            "description": "Value that uniquely identifies the reservation.",
+            "id": 2,
+            "isToken": true,
+            "location": "path",
+            "source": "placeholder",
+            "defaultValue": ""
+          }
+        ],
+        "headers": {
+          "X-HTTP-Method-Override": "DELETE"
+        }
+      },
+      {
+        "name": "update_inventoryReservations",
+        "description": "Update one reservation",
+        "operationType": "PATCH",
+        "resourcePath": "/fscmRestApi/resources/latest/inventoryReservations/{pReservationId}",
+        "resourceType": "ADF_BC_FIXED_QUERY",
+        "bodyTemplate": "{\n\"SupplyTaskNumber\":\"{pSupplyTaskNumber}\",\n\"SupplyProjectNumber\":\"{pSupplyProjectNumber}\",\n\"SupplySourceLineId\":\"{pSupplySourceLineId}\",\n\"SupplyTaskId\":\"{pSupplyTaskId}\",\n\"ShipToPartyId\":\"{pShipToPartyId}\",\n\"SubinventoryCode\":\"{pSubinventoryCode}\",\n\"SubinventoryId\":\"{pSubinventoryId}\",\n\"RequirementDate\":\"{pRequirementDate}\",\n\"Locator\":\"{pLocator}\",\n\"SupplyProjectId\":\"{pSupplyProjectId}\",\n\"LotNumber\":\"{pLotNumber}\",\n\"PrimaryReservationQuantity\":\"{pPrimaryReservationQuantity}\",\n\"LocatorId\":\"{pLocatorId}\",\n\"SupplySourceHeaderNumber\":\"{pSupplySourceHeaderNumber}\",\n\"SupplySourceType\":\"{pSupplySourceType}\",\n\"SupplySourceLineNumber\":\"{pSupplySourceLineNumber}\",\n\"SecondaryReservationQuantity\":\"{pSecondaryReservationQuantity}\",\n\"SupplySourceHeaderId\":\"{pSupplySourceHeaderId}\",\n\"Revision\":\"{pRevision}\",\n\"ReservationQuantity\":\"{pReservationQuantity}\",\n\"SupplySourceTypeId\":\"{pSupplySourceTypeId}\",\n\"PickQuantity\":\"{pPickQuantity}\",\n\"ReservationUOMCode\":\"{pReservationUOMCode}\",\n\"ReservationUnitOfMeasure\":\"{pReservationUnitOfMeasure}\"\n}",
+        "useNativeAuthentication": true,
+        "type": "BUS_OBJECT",
+        "parameterDefinitions": [
+          {
+            "name": "pReservationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the reservation.",
+            "id": 5,
+            "isToken": true,
+            "location": "path",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplyTaskNumber",
+            "dataType": "string",
+            "description": "Number that identifies the task corresponding to a project for the supply document.",
+            "id": 6,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplyProjectNumber",
+            "dataType": "string",
+            "description": "Number that identifies the project for the supply document.",
+            "id": 7,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplySourceLineId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the line in the supply document.",
+            "id": 8,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplyTaskId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the task corresponding to a project for the supply document.",
+            "id": 9,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pShipToPartyId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the party that receives the item.",
+            "id": 10,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSubinventoryCode",
+            "dataType": "string",
+            "description": "Name of the subinventory that the warehouse uses to make the reservation.",
+            "id": 11,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSubinventoryId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the subinventory that the warehouse uses to reserve the item.",
+            "id": 12,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pRequirementDate",
+            "dataType": "string",
+            "description": "Date when the customer requires the item.",
+            "id": 13,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pLocator",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the subinventory that the warehouse uses to reserve inventory for the item. It is typically a physical area in the subinventory, such as a row, aisle, bin, or shelf, that stores the item.",
+            "id": 14,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplyProjectId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the project for the supply document.",
+            "id": 15,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pLotNumber",
+            "dataType": "string",
+            "description": "Number that identifies an item or group of items. Applies when the warehouse places the item under lot control.",
+            "id": 16,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pPrimaryReservationQuantity",
+            "dataType": "number",
+            "description": "Reserved quantity expressed in the primary unit of measure of the item.",
+            "id": 17,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pLocatorId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the locator for the reservation.",
+            "id": 18,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplySourceHeaderNumber",
+            "dataType": "string",
+            "description": "Document that specifies supply details for the item.",
+            "id": 19,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplySourceType",
+            "dataType": "string",
+            "description": "Type of the supply document. A list of accepted values that includes Purchase Order, On Hand, Requisition, Transfer Order Return, Work Order or Transfer Order.",
+            "id": 20,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplySourceLineNumber",
+            "dataType": "string",
+            "description": "Line number in the supply document.",
+            "id": 21,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSecondaryReservationQuantity",
+            "dataType": "number",
+            "description": "Reservation quantity expressed in the secondary unit of measure.",
+            "id": 22,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplySourceHeaderId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the supply document.",
+            "id": 23,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pRevision",
+            "dataType": "string",
+            "description": "Revision of the item. Applies when the warehouse places the item under revision control.",
+            "id": 24,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pReservationQuantity",
+            "dataType": "number",
+            "description": "Reserved quantity expressed in the primary unit of measure of the item.",
+            "id": 25,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplySourceTypeId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the supply source type.",
+            "id": 26,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pPickQuantity",
+            "dataType": "number",
+            "description": "Quantity of an item picked from the storage area in preparation for shipment or production.",
+            "id": 27,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pReservationUOMCode",
+            "dataType": "string",
+            "description": "Reservation Unit of measure code.",
+            "id": 28,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pReservationUnitOfMeasure",
+            "dataType": "string",
+            "description": "Reservation Unit Of Measure",
+            "id": 29,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "SubinventoryName",
+            "dataType": "string",
+            "description": "Name of the subinventory.",
+            "id": 30,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ShipToCustomer",
+            "dataType": "string",
+            "description": "Customer who receives the item.",
+            "id": 31,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "WorkOrderProductId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the finished item that needs to be manufactured.",
+            "id": 32,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "WorkOrderProductNumber",
+            "dataType": "string",
+            "description": "Number that identifies the finished item that needs to be manufactured.",
+            "id": 33,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "BackToBackMeaning",
+            "dataType": "string",
+            "description": "Value that identifies whether the reservation is back-to-back.",
+            "id": 34,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "StagedMeaning",
+            "dataType": "string",
+            "description": "Value that identifies whether the reservation is staged.",
+            "id": 35,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplierName",
+            "dataType": "string",
+            "description": "Name that identifies the supplier of the reserved material.",
+            "id": 36,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ItemDescription",
+            "dataType": "string",
+            "description": "Description that identifies the inventory item.",
+            "id": 37,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ReservationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the reservation.",
+            "id": 38,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the warehouse organization that reserves inventory to fulfill the item.",
+            "id": 39,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the warehouse organization that reserves inventory to fulfill the item.",
+            "id": 40,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "InventoryItemId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the item in inventory that the warehouse reserves to fulfill the item.",
+            "id": 41,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ItemNumber",
+            "dataType": "string",
+            "description": "Number that identifies the inventory item.",
+            "id": 42,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceTypeId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the type of document that requests the inventory reservation.",
+            "id": 43,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceType",
+            "dataType": "string",
+            "description": "Type of document that requests the inventory reservation. A list of accepted values is defined in the lookup type INV_RESERVATION_SOURCE_TYPES. Values include User Defined, Transfer Order Return, Sales Order, Shipment Request, Account, Movement Request, Account Alias, Transfer order, or Cycle Count.",
+            "id": 44,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceHeaderId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the demand document.",
+            "id": 45,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceHeaderNumber",
+            "dataType": "string",
+            "description": "Document that specifies demand details for the item that the warehouse will reserve in inventory.",
+            "id": 46,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceName",
+            "dataType": "string",
+            "description": "Name of the source that requests the demand.",
+            "id": 47,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceLineId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the demand line.",
+            "id": 48,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceLineNumber",
+            "dataType": "string",
+            "description": "Value that uniquely identifies the line number in the demand document.",
+            "id": 49,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SourceFulfillmentLineId",
+            "dataType": "integer",
+            "description": "Value that order orchestration uses to uniquely identify the reservation.",
+            "id": 50,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "PrimaryUOMCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the primary unit of measure.",
+            "id": 51,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "PrimaryUnitOfMeasure",
+            "dataType": "string",
+            "description": "Primary unit of measure of the item.",
+            "id": 52,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SecondaryUOMCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the secondary unit of measure.",
+            "id": 53,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SecondaryUnitOfMeasure",
+            "dataType": "string",
+            "description": "Secondary unit of measure of the item.",
+            "id": 54,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandProjectId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the project for the demand document.",
+            "id": 55,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandTaskId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the task corresponding to a project for the demand document.",
+            "id": 56,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandProjectNumber",
+            "dataType": "string",
+            "description": "Number that identifies the project for the demand document.",
+            "id": 57,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandTaskNumber",
+            "dataType": "string",
+            "description": "Number that identifies the task corresponding to a project for the demand document.",
+            "id": 58,
+            "isToken": false,
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "name": "create_inventoryReservations",
+        "description": "Create one reservation",
+        "operationType": "POST",
+        "resourcePath": "/fscmRestApi/resources/latest/inventoryReservations",
+        "resourceType": "ADF_BC_FIXED_QUERY",
+        "bodyTemplate": "{\n\"DemandProjectNumber\":\"{pDemandProjectNumber}\",\n\"SupplyTaskNumber\":\"{pSupplyTaskNumber}\",\n\"SourceFulfillmentLineId\":\"{pSourceFulfillmentLineId}\",\n\"SecondaryUnitOfMeasure\":\"{pSecondaryUnitOfMeasure}\",\n\"SupplyTaskId\":\"{pSupplyTaskId}\",\n\"ShipToPartyId\":\"{pShipToPartyId}\",\n\"DemandSourceName\":\"{pDemandSourceName}\",\n\"DemandSourceTypeId\":\"{pDemandSourceTypeId}\",\n\"Locator\":\"{pLocator}\",\n\"DemandSourceHeaderId\":\"{pDemandSourceHeaderId}\",\n\"DemandProjectId\":\"{pDemandProjectId}\",\n\"SupplyProjectId\":\"{pSupplyProjectId}\",\n\"DemandSourceHeaderNumber\":\"{pDemandSourceHeaderNumber}\",\n\"InventoryItemId\":\"{pInventoryItemId}\",\n\"LocatorId\":\"{pLocatorId}\",\n\"SupplySourceLineNumber\":\"{pSupplySourceLineNumber}\",\n\"Revision\":\"{pRevision}\",\n\"ReservationQuantity\":\"{pReservationQuantity}\",\n\"SupplySourceTypeId\":\"{pSupplySourceTypeId}\",\n\"OperationSequenceNumber\":\"{pOperationSequenceNumber}\",\n\"OrderInterfaceStatus\":\"{pOrderInterfaceStatus}\",\n\"SupplyProjectNumber\":\"{pSupplyProjectNumber}\",\n\"DemandSourceLineNumber\":\"{pDemandSourceLineNumber}\",\n\"SupplySourceLineId\":\"{pSupplySourceLineId}\",\n\"OrganizationId\":\"{pOrganizationId}\",\n\"DemandTaskNumber\":\"{pDemandTaskNumber}\",\n\"SubinventoryCode\":\"{pSubinventoryCode}\",\n\"SubinventoryId\":\"{pSubinventoryId}\",\n\"ReservationUOMCode\":\"{pReservationUOMCode}\",\n\"RequirementDate\":\"{pRequirementDate}\",\n\"ItemNumber\":\"{pItemNumber}\",\n\"ReservationId\":\"{pReservationId}\",\n\"DemandSourceLineId\":\"{pDemandSourceLineId}\",\n\"SecondaryUOMCode\":\"{pSecondaryUOMCode}\",\n\"OrganizationCode\":\"{pOrganizationCode}\",\n\"LotNumber\":\"{pLotNumber}\",\n\"DemandSourceType\":\"{pDemandSourceType}\",\n\"SupplySourceHeaderNumber\":\"{pSupplySourceHeaderNumber}\",\n\"SupplySourceType\":\"{pSupplySourceType}\",\n\"SecondaryReservationQuantity\":\"{pSecondaryReservationQuantity}\",\n\"SupplySourceHeaderId\":\"{pSupplySourceHeaderId}\",\n\"SourceFulfillmentLineNumber\":\"{pSourceFulfillmentLineNumber}\",\n\"PickQuantity\":\"{pPickQuantity}\",\n\"DemandTaskId\":\"{pDemandTaskId}\"\n}",
+        "useNativeAuthentication": true,
+        "type": "BUS_OBJECT",
+        "parameterDefinitions": [
+          {
+            "name": "pDemandProjectNumber",
+            "dataType": "string",
+            "description": "Number that identifies the project for the demand document.",
+            "id": 60,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplyTaskNumber",
+            "dataType": "string",
+            "description": "Number that identifies the task corresponding to a project for the supply document.",
+            "id": 61,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSourceFulfillmentLineId",
+            "dataType": "integer",
+            "description": "Value that order orchestration uses to uniquely identify the reservation.",
+            "id": 62,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSecondaryUnitOfMeasure",
+            "dataType": "string",
+            "description": "Secondary unit of measure of the item.",
+            "id": 63,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplyTaskId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the task corresponding to a project for the supply document.",
+            "id": 64,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pShipToPartyId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the party that receives the item.",
+            "id": 65,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pDemandSourceName",
+            "dataType": "string",
+            "description": "Demand Source Name of the Demand Document.",
+            "id": 66,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pDemandSourceTypeId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the demand source type that requests the inventory reservation.",
+            "id": 67,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pLocator",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the subinventory that the warehouse uses to reserve inventory for the item. It is typically a physical area in the subinventory, such as a row, aisle, bin, or shelf, that stores the item.",
+            "id": 68,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pDemandSourceHeaderId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the demand source header document.",
+            "id": 69,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pDemandProjectId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the project for the demand document.",
+            "id": 70,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplyProjectId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the project for the supply document.",
+            "id": 71,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pDemandSourceHeaderNumber",
+            "dataType": "string",
+            "description": "Document that specifies demand details for the item that the warehouse will reserve in inventory.",
+            "id": 72,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pInventoryItemId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the item in inventory that the warehouse reserves to fulfill the item.",
+            "id": 73,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pLocatorId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the locator for the reservation.",
+            "id": 74,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplySourceLineNumber",
+            "dataType": "string",
+            "description": "Line number in the supply document.",
+            "id": 75,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pRevision",
+            "dataType": "string",
+            "description": "Revision of the item. Applies when the warehouse places the item under revision control.",
+            "id": 76,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pReservationQuantity",
+            "dataType": "number",
+            "description": "Reservation quantity expressed in the primary unit of measure.",
+            "id": 77,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplySourceTypeId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the supply source type.",
+            "id": 78,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pOperationSequenceNumber",
+            "dataType": "string",
+            "description": "Sequence number of a specific operation as defined in a work order.",
+            "id": 79,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pOrderInterfaceStatus",
+            "dataType": "string",
+            "description": "Contains one of the following values: Y or N. If Y, then the sales order or the transfer order demand is interfaced to inventory or shipping. If N, then the sales order or the transfer order demand is awaiting to be interfaced to inventory or shipping. This attribute doesn't have a default value.",
+            "id": 80,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplyProjectNumber",
+            "dataType": "string",
+            "description": "Number that identifies the project for the supply document.",
+            "id": 81,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pDemandSourceLineNumber",
+            "dataType": "string",
+            "description": "Value that uniquely identifies the line number in the demand document.",
+            "id": 82,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplySourceLineId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the line in the supply document.",
+            "id": 83,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pOrganizationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the organization or warehouse that requests the inventory reservation.",
+            "id": 84,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pDemandTaskNumber",
+            "dataType": "string",
+            "description": "Number that identifies the task corresponding to a project for the demand document.",
+            "id": 85,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSubinventoryCode",
+            "dataType": "string",
+            "description": "Name of the subinventory that the warehouse uses to make the reservation.",
+            "id": 86,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSubinventoryId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the subinventory that the warehouse uses to reserve the item.",
+            "id": 87,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pReservationUOMCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the unit of measure that the user chooses when placing the reservation.",
+            "id": 88,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pRequirementDate",
+            "dataType": "string",
+            "description": "Date when the customer requires the item.",
+            "id": 89,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pItemNumber",
+            "dataType": "string",
+            "description": "Value that identifies the Item Number of the Inventory item that we are going to reserve.",
+            "id": 90,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pReservationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the reservation.",
+            "id": 91,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pDemandSourceLineId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the demand source line id.",
+            "id": 92,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSecondaryUOMCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the secondary unit of measure.",
+            "id": 93,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pOrganizationCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the warehouse organization that reserves inventory to fulfill the item.",
+            "id": 94,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pLotNumber",
+            "dataType": "string",
+            "description": "Number that identifies an item or group of items. Applies when the warehouse places the item under lot control.",
+            "id": 95,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pDemandSourceType",
+            "dataType": "string",
+            "description": "Type of document that requests the inventory reservation. A list of values that includes User Defined, Transfer Order Return, Sales order, Shipment Request, Account, Movement Request, Account Alias, Transfer Order or Cycle Count.",
+            "id": 96,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplySourceHeaderNumber",
+            "dataType": "string",
+            "description": "Document that specifies supply details for the item.",
+            "id": 97,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplySourceType",
+            "dataType": "string",
+            "description": "Type of the supply document. A list of accepted values that includes Purchase Order, On Hand, Requisition, Transfer Order Return, Work Order or Transfer Order.",
+            "id": 98,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSecondaryReservationQuantity",
+            "dataType": "number",
+            "description": "Reservation quantity expressed in the secondary unit of measure.",
+            "id": 99,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplySourceHeaderId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the supply document.",
+            "id": 100,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSourceFulfillmentLineNumber",
+            "dataType": "string",
+            "description": "Number that identifies a line corresponding to a source fulfillment line.",
+            "id": 101,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pPickQuantity",
+            "dataType": "number",
+            "description": "Quantity of an item picked from the storage area in preparation for shipment or production.",
+            "id": 102,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pDemandTaskId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the task corresponding to a project for the demand document.",
+            "id": 103,
+            "isToken": true,
+            "location": "body",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "SubinventoryName",
+            "dataType": "string",
+            "description": "Name of the subinventory.",
+            "id": 104,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ShipToCustomer",
+            "dataType": "string",
+            "description": "Customer who receives the item.",
+            "id": 105,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "WorkOrderProductId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the finished item that needs to be manufactured.",
+            "id": 106,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "WorkOrderProductNumber",
+            "dataType": "string",
+            "description": "Number that identifies the finished item that needs to be manufactured.",
+            "id": 107,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "BackToBackMeaning",
+            "dataType": "string",
+            "description": "Value that identifies whether the reservation is back-to-back.",
+            "id": 108,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "StagedMeaning",
+            "dataType": "string",
+            "description": "Value that identifies whether the reservation is staged.",
+            "id": 109,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplierName",
+            "dataType": "string",
+            "description": "Name that identifies the supplier of the reserved material.",
+            "id": 110,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ItemDescription",
+            "dataType": "string",
+            "description": "Description that identifies the inventory item.",
+            "id": 111,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ReservationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the reservation.",
+            "id": 112,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the warehouse organization that reserves inventory to fulfill the item.",
+            "id": 113,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the warehouse organization that reserves inventory to fulfill the item.",
+            "id": 114,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "InventoryItemId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the item in inventory that the warehouse reserves to fulfill the item.",
+            "id": 115,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ItemNumber",
+            "dataType": "string",
+            "description": "Number that identifies the inventory item.",
+            "id": 116,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceTypeId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the type of document that requests the inventory reservation.",
+            "id": 117,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceType",
+            "dataType": "string",
+            "description": "Type of document that requests the inventory reservation. A list of accepted values is defined in the lookup type INV_RESERVATION_SOURCE_TYPES. Values include User Defined, Transfer Order Return, Sales Order, Shipment Request, Account, Movement Request, Account Alias, Transfer order, or Cycle Count.",
+            "id": 118,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceHeaderId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the demand document.",
+            "id": 119,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceHeaderNumber",
+            "dataType": "string",
+            "description": "Document that specifies demand details for the item that the warehouse will reserve in inventory.",
+            "id": 120,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceName",
+            "dataType": "string",
+            "description": "Name of the source that requests the demand.",
+            "id": 121,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceLineId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the demand line.",
+            "id": 122,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandSourceLineNumber",
+            "dataType": "string",
+            "description": "Value that uniquely identifies the line number in the demand document.",
+            "id": 123,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SourceFulfillmentLineId",
+            "dataType": "integer",
+            "description": "Value that order orchestration uses to uniquely identify the reservation.",
+            "id": 124,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "PrimaryUOMCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the primary unit of measure.",
+            "id": 125,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "PrimaryUnitOfMeasure",
+            "dataType": "string",
+            "description": "Primary unit of measure of the item.",
+            "id": 126,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SecondaryUOMCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the secondary unit of measure.",
+            "id": 127,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SecondaryUnitOfMeasure",
+            "dataType": "string",
+            "description": "Secondary unit of measure of the item.",
+            "id": 128,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandProjectId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the project for the demand document.",
+            "id": 129,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandTaskId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the task corresponding to a project for the demand document.",
+            "id": 130,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandProjectNumber",
+            "dataType": "string",
+            "description": "Number that identifies the project for the demand document.",
+            "id": 131,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "DemandTaskNumber",
+            "dataType": "string",
+            "description": "Number that identifies the task corresponding to a project for the demand document.",
+            "id": 132,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SourceFulfillmentLineNumber",
+            "dataType": "string",
+            "description": "Number that identifies a line corresponding to a source fulfillment line.",
+            "id": 133,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OperationSequenceNumber",
+            "dataType": "string",
+            "description": "Sequence number of a specific operation as defined in a work order.",
+            "id": 134,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OrderInterfaceStatus",
+            "dataType": "string",
+            "description": "Contains one of the following values: Y or N. If Y, then the sales order or the transfer order demand is interfaced to inventory or shipping. If N, then the sales order or the transfer order demand is awaiting to be interfaced to inventory or shipping. This attribute doesn't have a default value. This attribute is associated with a feature that requires opt in.",
+            "id": 135,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceTypeId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the type of the supply document.",
+            "id": 136,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceType",
+            "dataType": "string",
+            "description": "Type of the supply document. A list of accepted values is defined in the lookup type INV_RESERVATION_SUPPLY_SRC_TYP. Values include Purchase Order, On Hand, Requisition, Transfer Order Return, Work Order, or Transfer Order.",
+            "id": 137,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceHeaderId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the supply document.",
+            "id": 138,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceHeaderNumber",
+            "dataType": "string",
+            "description": "Document that specifies supply details for the item.",
+            "id": 139,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceLineId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the line in the supply document.",
+            "id": 140,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceLineNumber",
+            "dataType": "string",
+            "description": "Line number in the supply document.",
+            "id": 141,
+            "isToken": false,
+            "defaultValue": ""
+          }
+        ]
+      }
+    ]
+  }
+}

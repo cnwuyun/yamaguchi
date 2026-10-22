@@ -1,0 +1,225 @@
+{
+  "supportedObjectId": "100002240134925",
+  "$context": {
+    "etag": "1"
+  },
+  "name": "Supply Document Details BO",
+  "description": "A business object used to retrieve detailed information for a given supply source document type within the Inventory Management Warehouse system.",
+  "objectCode": "ORA_SCM_INVENTORYM_SUPPLYDOCUMENTD",
+  "family": "SCM",
+  "product": "INVENTORY_MANAGEMENT",
+  "objectSource": "ADF_BC",
+  "restResourcePath": "/fscmRestApi/resources/latest/supplyLineDetailsByTypes",
+  "restResourceIdentifier": "-1",
+  "seededFlag": true,
+  "mandatoryFlag": false,
+  "objectProperties": {
+    "jsonSchemaName": "supportedObjectProperties",
+    "jsonSchemaVersion": 1,
+    "tools": [
+      {
+        "name": "getall_supplyLineDetailsByTypes",
+        "description": "Get details of all supply line",
+        "operationType": "GET",
+        "resourcePath": "/fscmRestApi/resources/latest/supplyLineDetailsByTypes?onlyData=true&limit={pLimit}&offset={pOffset}&q=TotalAtr > 0&finder=findSupplyDetails;bindSupplySourceTypeId={pSupplySourceTypeId},bindInventoryItemId={pInventoryItemId},bindOrganizationId={pOrganizationId},bindOrderedUOM='{pOrderedUOM}'&orderBy=ExpectedDeliveryDate:desc",
+        "resourceType": "ADF_BC_FIXED_QUERY",
+        "bodyTemplate": "",
+        "useNativeAuthentication": true,
+        "type": "BUS_OBJECT",
+        "parameterDefinitions": [
+          {
+            "name": "pLimit",
+            "dataType": "number",
+            "description": "This parameter restricts the number of resources returned inside the resource collection. If the limit exceeds the resource count then the framework will only return the available resources.",
+            "id": 2,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pOffset",
+            "dataType": "integer",
+            "description": "Value to define the starting position of the resource collection.",
+            "id": 3,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pSupplySourceTypeId",
+            "dataType": "number",
+            "description": "Value that uniquely identifies the supply source type.",
+            "id": 4,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pInventoryItemId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the inventory item related to the supply source.",
+            "id": 5,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pOrganizationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the organization related to the supply source.",
+            "id": 6,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pOrderedUOM",
+            "dataType": "string",
+            "description": "Value that identifies the UOM code related to the supply source.",
+            "id": 7,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceTypeId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the supply source type.",
+            "id": 8,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ItemNumber",
+            "dataType": "string",
+            "description": "Value that uniquely identifies the item number for the supply.",
+            "id": 9,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationCode",
+            "dataType": "string",
+            "description": "Code that uniquely identifies the organization",
+            "id": 10,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceHeaderId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the supply document.",
+            "id": 11,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceLineId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the supply document line.",
+            "id": 12,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceHeaderNumber",
+            "dataType": "string",
+            "description": "Supply document number for the supply line.",
+            "id": 13,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplySourceLineNumber",
+            "dataType": "string",
+            "description": "Supply document line number for the supply line.",
+            "id": 14,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "InventoryItemId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the item.",
+            "id": 15,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the organization.",
+            "id": 16,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "SupplierName",
+            "dataType": "string",
+            "description": "Indicates the name of the supplier.",
+            "id": 17,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "TotalAtr",
+            "dataType": "number",
+            "description": "Total available to reserve quantity on the supply line.",
+            "id": 18,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "PrimaryUOMCode",
+            "dataType": "string",
+            "description": "Code that uniquely identifies the primary unit of measure of the item on the supply line.",
+            "id": 19,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ReservedQuantity",
+            "dataType": "number",
+            "description": "Quantity reserved for the supply line.",
+            "id": 20,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ExpectedDeliveryDate",
+            "dataType": "string",
+            "description": "Date when the supply line is expected.",
+            "id": 21,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ReservationStatus",
+            "dataType": "string",
+            "description": "Indicates the reservation status for the demand line.",
+            "id": 22,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ReservationStatusCode",
+            "dataType": "number",
+            "description": "Status code of the reservation for the order.",
+            "id": 23,
+            "isToken": false,
+            "defaultValue": ""
+          }
+        ],
+        "headers": {
+          "REST-Framework-Version": "9"
+        }
+      }
+    ]
+  }
+}

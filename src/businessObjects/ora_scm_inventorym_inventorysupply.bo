@@ -1,0 +1,107 @@
+{
+  "supportedObjectId": "100002240134940",
+  "$context": {
+    "etag": "1"
+  },
+  "name": "Inventory Supply Source Options BO",
+  "description": "A business object used to retrieve the different available supply source document types within the Inventory Management Warehouse system along with their available-to-reserve quantities.",
+  "objectCode": "ORA_SCM_INVENTORYM_INVENTORYSUPPLY",
+  "family": "SCM",
+  "product": "INVENTORY_MANAGEMENT",
+  "objectSource": "ADF_BC",
+  "restResourcePath": "/fscmRestApi/resources/latest/availableToReserveByDocumentTypes",
+  "restResourceIdentifier": "-1",
+  "seededFlag": true,
+  "mandatoryFlag": false,
+  "objectProperties": {
+    "jsonSchemaName": "supportedObjectProperties",
+    "jsonSchemaVersion": 1,
+    "tools": [
+      {
+        "name": "getall_availableToReserveByDocumentTypes",
+        "description": "Get all available to reserve records by supply types",
+        "operationType": "GET",
+        "resourcePath": "/fscmRestApi/resources/latest/availableToReserveByDocumentTypes?onlyData=true&q=ATRRecord='{pInventoryItemId}:{pOrganizationId}:{pOrderedUOM}:::' and AvailableToReserve>0",
+        "resourceType": "ADF_BC_FIXED_QUERY",
+        "bodyTemplate": "",
+        "useNativeAuthentication": true,
+        "type": "BUS_OBJECT",
+        "parameterDefinitions": [
+          {
+            "name": "pInventoryItemId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the inventory item related to the supply source.",
+            "id": 2,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pOrganizationId",
+            "dataType": "string",
+            "description": "Value that uniquely identifies the organization related to the supply source.",
+            "id": 3,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pOrderedUOM",
+            "dataType": "string",
+            "description": "Value that identifies the UOM code related to the supply source.",
+            "id": 4,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "LookupCode",
+            "dataType": "string",
+            "description": "Code to identify the supply type.",
+            "id": 5,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "Meaning",
+            "dataType": "string",
+            "description": "Value that provides the supply type corresponding to an incoming supply.",
+            "id": 6,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "AvailableToReserve",
+            "dataType": "number",
+            "description": "Available to reserve quantity for supply records.",
+            "id": 7,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ATRRecord",
+            "dataType": "string",
+            "description": "Available to reserve quantity for a combination of organization, item, ordered UOM, supply document number, and supply document line number.",
+            "id": 8,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ExpectedDeliveryDate",
+            "dataType": "string",
+            "description": "Date when the supply line is expected.",
+            "id": 9,
+            "isToken": false,
+            "defaultValue": ""
+          }
+        ],
+        "headers": {
+          "REST-Framework-Version": "9"
+        }
+      }
+    ]
+  }
+}

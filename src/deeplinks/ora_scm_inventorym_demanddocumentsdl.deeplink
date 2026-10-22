@@ -1,0 +1,55 @@
+{
+  "$id": "100002240138750",
+  "deepLinkId": "100002240138750",
+  "$context": {
+    "etag": "1"
+  },
+  "createdBy": "SEED_DATA_FROM_APPLICATION",
+  "updatedBy": "SEED_DATA_FROM_APPLICATION",
+  "timeUpdated": "2026-03-14T15:38:49.363319Z",
+  "name": "Demand Documents DL",
+  "family": "SCM",
+  "product": "INVENTORY_MANAGEMENT",
+  "deepLinkCode": "ORA_SCM_INVENTORYM_DEMANDDOCUMENTSDL",
+  "description": "URL to navigate to Search Document Demand Redwood page.",
+  "message": "Click {deepLink} for details.",
+  "destinationUrl": "/fscmUI/redwood/inventory-availability/manage-reservations/demand-documents?demandSourceTypeId={pDemandSourceTypeId}&organizationId={pOrganizationId}",
+  "usageType": "VbAppUi",
+  "seededFlag": true,
+  "deepLinkProperties": {
+    "description": "URL to navigate to Search Document Demand Redwood page.",
+    "fixedQuery": "/fscmUI/redwood/inventory-availability/manage-reservations/demand-documents?demandSourceTypeId={pDemandSourceTypeId}&organizationId={pOrganizationId}",
+    "jsonSchemaName": "DeepLink.deepLinkProperties",
+    "jsonSchemaVersion": 1,
+    "isSeeded": true,
+    "name": "oraScmInventorymDemanddocumentsdl",
+    "type": "DEEPLINK",
+    "operationType": "GET",
+    "resourceType": "ADF_BC_DEEPLINK",
+    "parameterDefinitions": [
+      {
+        "name": "pDemandSourceTypeId",
+        "description": "Demand Source Type Id",
+        "dataType": "string",
+        "queryable": true,
+        "sampleValue": "2"
+      },
+      {
+        "name": "pOrganizationId",
+        "description": "Organization Id",
+        "dataType": "string",
+        "queryable": true,
+        "sampleValue": "207"
+      }
+    ],
+    "sampleQueries": [
+      {
+        "description": "URL to navigate to Search Document Demand Redwood page.",
+        "query": {
+          "pDemandSourceTypeId": "2",
+          "pOrganizationId": "207"
+        }
+      }
+    ]
+  }
+}

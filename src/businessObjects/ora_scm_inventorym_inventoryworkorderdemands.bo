@@ -1,0 +1,57 @@
+{
+  "supportedObjectId": "100002354783114",
+  "$context": {
+    "etag": "1"
+  },
+  "name": "Inventory Work Order Demands",
+  "description": "This resource fetches the work order demand across the inventory organizations using the organization code and item identifier.",
+  "objectCode": "ORA_SCM_INVENTORYM_INVENTORYWORKORDERDEMANDS",
+  "family": "SCM",
+  "product": "INVENTORY_MANAGEMENT",
+  "objectSource": "ADF_BC",
+  "restResourcePath": "/fscmRestApi/resources/11.13.18.05/invWorkOrderReservationsStatuses",
+  "restResourceIdentifier": "-1",
+  "seededFlag": true,
+  "mandatoryFlag": false,
+  "objectProperties": {
+    "jsonSchemaName": "supportedObjectProperties",
+    "jsonSchemaVersion": 1,
+    "tools": [
+      {
+        "name": "getall_WorkOrderDemandsInOtherOrgs",
+        "description": "Get all work orders from other inventory organizations.",
+        "operationType": "GET",
+        "resourcePath": "/fscmRestApi/resources/11.13.18.05/invWorkOrderReservationsStatuses?q=OrganizationCode='{pOrgCode}'&finder=findByItemAndExpirationDate;bindItemId={pItemId}&onlyData=true",
+        "resourceType": "ADF_BC_FIXED_QUERY",
+        "bodyTemplate": "",
+        "useNativeAuthentication": true,
+        "type": "BUS_OBJECT",
+        "parameterDefinitions": [
+          {
+            "name": "pOrgCode",
+            "dataType": "string",
+            "description": "Organization Code",
+            "id": 2,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pItemId",
+            "dataType": "string",
+            "description": "Item Identifier",
+            "id": 3,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          }
+        ],
+        "headers": {
+          "REST-Framework-Version": "9"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "workflowId": "300000339941074",
+  "workflowCode": "INVENTORY_RESERVATIONS_AI_ASSISTANT_SINGLE_AGENT_V10_YY",
+  "name": "Inventory Reservations AI Assistant (single agent) v1.0 _YY",
+  "description": "The Inventory Reservations AI Assistant is a sophisticated, modular, and intelligent system designed to streamline and optimize inventory reservation management within supply chain operations. Built to support enterprises in industries such as manufacturing, logistics, and retail, this assistant empowers users to efficiently manage inventory reservations by automating complex tasks, providing actionable insights, and ensuring seamless integration with existing supply chain systems. Leveraging advanced natural language processing (NLP), rule-based logic, and specialized tools, the assistant interprets user queries, executes precise actions, and delivers clear, user-friendly outputs, enabling supply chain professionals to focus on strategic decision-making.",
+  "specification": {
+    "jsonSchemaName": "Workflow.spec",
+    "jsonSchemaVersion": "1",
+    "partnerMetadata": {},
+    "inputs": [],
+    "outputSpecification": " ",
+    "agentsValueMappings": [
+      {
+        "agentCode": "RESERVATIONSWORKER_V10_YY",
+        "inputs": [],
+        "outputSpecification": " "
+      }
+    ],
+    "dataPipeline": {
+      "pipelineNodes": [
+        {
+          "metadata": {
+            "description": "End of data pipeline",
+            "name": "End"
+          },
+          "outcomes": {},
+          "code": "END",
+          "id": "end",
+          "inputs": [],
+          "type": "END"
+        }
+      ],
+      "rootNode": "end",
+      "variables": [],
+      "errorHandlers": [
+        {
+          "type": "EMAIL",
+          "inputs": [
+            {
+              "name": "toList",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "name": "ccList",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "name": "subject",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "name": "body",
+              "type": "string",
+              "value": ""
+            }
+          ]
+        }
+      ]
+    },
+    "modelConfiguration": null,
+    "humanApprovalFlag": false,
+    "waitFlag": false,
+    "triggers": [
+      {
+        "type": "REST",
+        "inputs": []
+      }
+    ],
+    "costSavings": 0,
+    "timeSavings": 10,
+    "chatExpTPFileUploadEnabledFlag": false,
+    "chatExpThirdPartyDetails": [],
+    "policyIds": []
+  },
+  "status": "DRAFT",
+  "version": 3,
+  "family": "SCM",
+  "product": "INVENTORY_MANAGEMENT",
+  "ownerName": null,
+  "customFlag": true,
+  "seededFlag": false,
+  "hiddenFlag": false,
+  "useCaseId": "NA",
+  "accessModifier": "public",
+  "architecture": "single_agent",
+  "sourceWorkflowCode": "ORA_INVENTORY_RESERVATIONS_AI_ASSISTANT_SINGLE_AGENT_V10",
+  "firstStarterQuestion": "Review demand documents.",
+  "secondStarterQuestion": "Create reservations given order details.",
+  "thirdStarterQuestion": "Update reservations given order details.",
+  "followupEnabledFlag": false,
+  "followupPrompt": "Based on the following conversion: $param.system_context.chat_history generate $param.system_context.number_of_follow_up_questions\nfollow up questions only while strictly adhering to the JSON Schema format mentioned below. Remove the ```json markdown from the output.\nHere is the JSON Schema format the output should adhere to:\n[{\"question\": \"<put first question generated here>\"}, {\"question\": \"<put second question generated here>\"}, {\"question\": \"<put third question generated here>\"}",
+  "header": {
+    "ETag": "\"1\""
+  }
+}

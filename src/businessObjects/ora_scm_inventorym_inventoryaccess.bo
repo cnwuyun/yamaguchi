@@ -1,0 +1,81 @@
+{
+  "supportedObjectId": "100002240134936",
+  "$context": {
+    "etag": "1"
+  },
+  "name": "Inventory Accessible Organizations",
+  "description": "Business object to validate an organization by organization name or organization code.",
+  "objectCode": "ORA_SCM_INVENTORYM_INVENTORYACCESS",
+  "family": "SCM",
+  "product": "INVENTORY_MANAGEMENT",
+  "objectSource": "ADF_BC",
+  "restResourcePath": "/fscmRestApi/resources/11.13.18.05/inventoryAccessibleOrganizations",
+  "restResourceIdentifier": "-1",
+  "seededFlag": true,
+  "mandatoryFlag": false,
+  "objectProperties": {
+    "jsonSchemaName": "supportedObjectProperties",
+    "jsonSchemaVersion": 1,
+    "tools": [
+      {
+        "name": "getall_inventoryAccessibleOrganizations",
+        "description": "Get all inventory organizations",
+        "operationType": "GET",
+        "resourcePath": "/fscmRestApi/resources/11.13.18.05/inventoryAccessibleOrganizations?q=UPPER(OrganizationName) like UPPER('{pOrganizationName}%') and OrganizationCode = '{pOrganizationCode}'&onlyData=true&limit=1",
+        "resourceType": "ADF_BC_FIXED_QUERY",
+        "bodyTemplate": "",
+        "useNativeAuthentication": true,
+        "type": "BUS_OBJECT",
+        "parameterDefinitions": [
+          {
+            "name": "pOrganizationName",
+            "dataType": "string",
+            "description": "Value that identifies the name of an organization or warehouse that requests the inventory reservation.",
+            "id": 2,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pOrganizationCode",
+            "dataType": "string",
+            "description": "Value that identifies the code of an organization or warehouse that requests the inventory reservation.",
+            "id": 3,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the organization.",
+            "id": 4,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the organization.",
+            "id": 5,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationName",
+            "dataType": "string",
+            "description": "Name of the organization.",
+            "id": 6,
+            "isToken": false,
+            "defaultValue": ""
+          }
+        ],
+        "headers": {
+          "REST-Framework-Version": "9"
+        }
+      }
+    ]
+  }
+}

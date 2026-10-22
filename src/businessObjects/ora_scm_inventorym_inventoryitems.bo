@@ -1,0 +1,105 @@
+{
+  "supportedObjectId": "100002240134938",
+  "$context": {
+    "etag": "1"
+  },
+  "name": "Inventory Items",
+  "description": "Business object to validate an item, product, material based on its name or number.",
+  "objectCode": "ORA_SCM_INVENTORYM_INVENTORYITEMS",
+  "family": "SCM",
+  "product": "INVENTORY_MANAGEMENT",
+  "objectSource": "ADF_BC",
+  "restResourcePath": "/fscmRestApi/resources/11.13.18.05/itemsLOV",
+  "restResourceIdentifier": "-1",
+  "seededFlag": true,
+  "mandatoryFlag": false,
+  "objectProperties": {
+    "jsonSchemaName": "supportedObjectProperties",
+    "jsonSchemaVersion": 1,
+    "tools": [
+      {
+        "name": "getall_itemsLOV",
+        "description": "Get all items",
+        "operationType": "GET",
+        "resourcePath": "/fscmRestApi/resources/11.13.18.05/itemsLOV?q=OrganizationId={pOrganizationId} and UPPER(ItemNumber) = UPPER('{pItemNumber}')&onlyData=true",
+        "resourceType": "ADF_BC_FIXED_QUERY",
+        "bodyTemplate": "",
+        "useNativeAuthentication": true,
+        "type": "BUS_OBJECT",
+        "parameterDefinitions": [
+          {
+            "name": "pOrganizationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the organization or warehouse that requests the inventory reservation.",
+            "id": 2,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "pItemNumber",
+            "dataType": "string",
+            "description": "Value that identifies the Item Number of the Inventory item that we are going to reserve.",
+            "id": 3,
+            "isToken": true,
+            "location": "query",
+            "source": "placeholder",
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the organization. Review the value for this attribute using the Setup and Maintenance work area, and the Manage Inventory Organizations task.",
+            "id": 4,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "OrganizationCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the organization. Review the value for this attribute using the Setup and Maintenance work area, and the Manage Inventory Organizations task.",
+            "id": 5,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ItemId",
+            "dataType": "integer",
+            "description": "Value that uniquely identifies the part, item, product, or service.",
+            "id": 6,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ItemNumber",
+            "dataType": "string",
+            "description": "Name or number of the part, item, product, or service.",
+            "id": 7,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "PrimaryUOMCode",
+            "dataType": "string",
+            "description": "Abbreviation that identifies the unit of measure that's used to determine pricing for an item. Review the value for this attribute using the Setup and Maintenance work area, and the Manage Unit of Measures task.",
+            "id": 8,
+            "isToken": false,
+            "defaultValue": ""
+          },
+          {
+            "name": "ItemDescription",
+            "dataType": "string",
+            "description": "Description of the part, item, product, or service.",
+            "id": 9,
+            "isToken": false,
+            "defaultValue": ""
+          }
+        ],
+        "headers": {
+          "REST-Framework-Version": "9"
+        }
+      }
+    ]
+  }
+}
