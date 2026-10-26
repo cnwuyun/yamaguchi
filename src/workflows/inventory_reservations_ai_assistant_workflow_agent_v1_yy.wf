@@ -701,6 +701,198 @@
               "name": "pReservationUOMCode",
               "type": "string",
               "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.reservationUOMCode}}"
+            },
+            {
+              "id": "20_pDemandProjectNumber",
+              "name": "pDemandProjectNumber",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pSupplyTaskNumber",
+              "name": "pSupplyTaskNumber",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pSourceFulfillmentLineId",
+              "name": "pSourceFulfillmentLineId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pSecondaryUnitOfMeasure",
+              "name": "pSecondaryUnitOfMeasure",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pSupplyTaskId",
+              "name": "pSupplyTaskId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pShipToPartyId",
+              "name": "pShipToPartyId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pDemandSourceName",
+              "name": "pDemandSourceName",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pLocator",
+              "name": "pLocator",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pDemandProjectId",
+              "name": "pDemandProjectId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pSupplyProjectId",
+              "name": "pSupplyProjectId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pInventoryItemId",
+              "name": "pInventoryItemId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pLocatorId",
+              "name": "pLocatorId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pRevision",
+              "name": "pRevision",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pOperationSequenceNumber",
+              "name": "pOperationSequenceNumber",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pOrderInterfaceStatus",
+              "name": "pOrderInterfaceStatus",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pSupplyProjectNumber",
+              "name": "pSupplyProjectNumber",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pSupplySourceLineId",
+              "name": "pSupplySourceLineId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pOrganizationId",
+              "name": "pOrganizationId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pDemandTaskNumber",
+              "name": "pDemandTaskNumber",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pSubinventoryCode",
+              "name": "pSubinventoryCode",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pSubinventoryId",
+              "name": "pSubinventoryId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pRequirementDate",
+              "name": "pRequirementDate",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pReservationId",
+              "name": "pReservationId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pSecondaryUOMCode",
+              "name": "pSecondaryUOMCode",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pLotNumber",
+              "name": "pLotNumber",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pDemandSourceType",
+              "name": "pDemandSourceType",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pSupplySourceType",
+              "name": "pSupplySourceType",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pSecondaryReservationQuantity",
+              "name": "pSecondaryReservationQuantity",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pSupplySourceHeaderId",
+              "name": "pSupplySourceHeaderId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pSourceFulfillmentLineNumber",
+              "name": "pSourceFulfillmentLineNumber",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pPickQuantity",
+              "name": "pPickQuantity",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "20_pDemandTaskId",
+              "name": "pDemandTaskId",
+              "type": "string",
+              "value": ""
             }
           ],
           "diagram": {
@@ -830,6 +1022,144 @@
               "name": "pReservationUOMCode",
               "type": "string",
               "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.reservationUOMCode}}"
+            },
+            {
+              "id": "23_pSupplyTaskNumber",
+              "name": "pSupplyTaskNumber",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pSupplyProjectNumber",
+              "name": "pSupplyProjectNumber",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pSupplySourceLineId",
+              "name": "pSupplySourceLineId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pSupplyTaskId",
+              "name": "pSupplyTaskId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pShipToPartyId",
+              "name": "pShipToPartyId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pSubinventoryCode",
+              "name": "pSubinventoryCode",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pSubinventoryId",
+              "name": "pSubinventoryId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pRequirementDate",
+              "name": "pRequirementDate",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pLocator",
+              "name": "pLocator",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pSupplyProjectId",
+              "name": "pSupplyProjectId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pLotNumber",
+              "name": "pLotNumber",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pPrimaryReservationQuantity",
+              "name": "pPrimaryReservationQuantity",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pLocatorId",
+              "name": "pLocatorId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pSupplySourceHeaderNumber",
+              "name": "pSupplySourceHeaderNumber",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pSupplySourceType",
+              "name": "pSupplySourceType",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pSupplySourceLineNumber",
+              "name": "pSupplySourceLineNumber",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pSecondaryReservationQuantity",
+              "name": "pSecondaryReservationQuantity",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pSupplySourceHeaderId",
+              "name": "pSupplySourceHeaderId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pRevision",
+              "name": "pRevision",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pSupplySourceTypeId",
+              "name": "pSupplySourceTypeId",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pPickQuantity",
+              "name": "pPickQuantity",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pReservationUnitOfMeasure",
+              "name": "pReservationUnitOfMeasure",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "23_pDemandSourceTypeId",
+              "name": "pDemandSourceTypeId",
+              "type": "string",
+              "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.demandSourceTypeId}}"
             }
           ],
           "diagram": {
@@ -1042,13 +1372,13 @@
               "id": "29_systemPrompt",
               "name": "systemPrompt",
               "type": "string",
-              "value": "You render inventory reservation details into a clean user-facing reply. Show only these columns: Demand Document Type, Demand Document Number, Demand Document Line Number, Reservation Quantity, Demand Quantity, Expected Date, Item Number, Organization Code, and Reservation UOM Code. Never reveal any internal ID fields such as organization ID, item ID, or document IDs."
+              "value": "You render inventory reservation details into a clean user-facing reply. Show only these columns: Demand Document Type, Demand Document Number, Demand Document Line Number, Reservation Quantity, Demand Quantity, Expected Date, Item Number, Organization Code, and Reservation UOM Code. Never reveal any internal ID fields such as organization ID, item ID, or document IDs.\n\nplease output Japanese language.\n"
             },
             {
               "id": "29_prompt",
               "name": "prompt",
               "type": "string",
-              "value": "Render the reservation details for the user. Data: {{$context.$nodes.VIEW_RESERVATIONS.$output}}. Return a concise, friendly summary."
+              "value": "Render the reservation details for the user. Data: {{$context.$nodes.VIEW_RESERVATIONS.$output}}. \n\nplease show a table.\nplease output Japanese language.\nReturn a concise, friendly summary.\n"
             }
           ],
           "diagram": {
@@ -1502,16 +1832,46 @@
                   },
                   "inputs": [
                     {
-                      "id": "create_one_pOrganizationCode",
-                      "name": "pOrganizationCode",
+                      "id": "create_one_pDemandProjectNumber",
+                      "name": "pDemandProjectNumber",
                       "type": "string",
-                      "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.organizationCode}}"
+                      "value": ""
                     },
                     {
-                      "id": "create_one_pItemNumber",
-                      "name": "pItemNumber",
+                      "id": "create_one_pSupplyTaskNumber",
+                      "name": "pSupplyTaskNumber",
                       "type": "string",
-                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.ItemNumber}}"
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pSourceFulfillmentLineId",
+                      "name": "pSourceFulfillmentLineId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pSecondaryUnitOfMeasure",
+                      "name": "pSecondaryUnitOfMeasure",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pSupplyTaskId",
+                      "name": "pSupplyTaskId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pShipToPartyId",
+                      "name": "pShipToPartyId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pDemandSourceName",
+                      "name": "pDemandSourceName",
+                      "type": "string",
+                      "value": ""
                     },
                     {
                       "id": "create_one_pDemandSourceTypeId",
@@ -1520,10 +1880,28 @@
                       "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceTypeId}}"
                     },
                     {
+                      "id": "create_one_pLocator",
+                      "name": "pLocator",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
                       "id": "create_one_pDemandSourceHeaderId",
                       "name": "pDemandSourceHeaderId",
                       "type": "string",
                       "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceHeaderId}}"
+                    },
+                    {
+                      "id": "create_one_pDemandProjectId",
+                      "name": "pDemandProjectId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pSupplyProjectId",
+                      "name": "pSupplyProjectId",
+                      "type": "string",
+                      "value": ""
                     },
                     {
                       "id": "create_one_pDemandSourceHeaderNumber",
@@ -1532,10 +1910,58 @@
                       "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceHeaderNumber}}"
                     },
                     {
-                      "id": "create_one_pDemandSourceLineId",
-                      "name": "pDemandSourceLineId",
+                      "id": "create_one_pInventoryItemId",
+                      "name": "pInventoryItemId",
                       "type": "string",
-                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceLineId}}"
+                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.InventoryItemId}}"
+                    },
+                    {
+                      "id": "create_one_pLocatorId",
+                      "name": "pLocatorId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pSupplySourceLineNumber",
+                      "name": "pSupplySourceLineNumber",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pRevision",
+                      "name": "pRevision",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pReservationQuantity",
+                      "name": "pReservationQuantity",
+                      "type": "string",
+                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.RequestedQuantity}}"
+                    },
+                    {
+                      "id": "create_one_pSupplySourceTypeId",
+                      "name": "pSupplySourceTypeId",
+                      "type": "string",
+                      "value": "13"
+                    },
+                    {
+                      "id": "create_one_pOperationSequenceNumber",
+                      "name": "pOperationSequenceNumber",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pOrderInterfaceStatus",
+                      "name": "pOrderInterfaceStatus",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pSupplyProjectNumber",
+                      "name": "pSupplyProjectNumber",
+                      "type": "string",
+                      "value": ""
                     },
                     {
                       "id": "create_one_pDemandSourceLineNumber",
@@ -1544,10 +1970,130 @@
                       "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceLineNumber}}"
                     },
                     {
-                      "id": "create_one_pReservationQuantity",
-                      "name": "pReservationQuantity",
+                      "id": "create_one_pSupplySourceLineId",
+                      "name": "pSupplySourceLineId",
                       "type": "string",
-                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.RequestedQuantity}}"
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pOrganizationId",
+                      "name": "pOrganizationId",
+                      "type": "string",
+                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.OrganizationId}}"
+                    },
+                    {
+                      "id": "create_one_pDemandTaskNumber",
+                      "name": "pDemandTaskNumber",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pSubinventoryCode",
+                      "name": "pSubinventoryCode",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pSubinventoryId",
+                      "name": "pSubinventoryId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pReservationUOMCode",
+                      "name": "pReservationUOMCode",
+                      "type": "string",
+                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.OrderedUOMCode}}"
+                    },
+                    {
+                      "id": "create_one_pRequirementDate",
+                      "name": "pRequirementDate",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pItemNumber",
+                      "name": "pItemNumber",
+                      "type": "string",
+                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.ItemNumber}}"
+                    },
+                    {
+                      "id": "create_one_pReservationId",
+                      "name": "pReservationId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pDemandSourceLineId",
+                      "name": "pDemandSourceLineId",
+                      "type": "string",
+                      "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceLineId}}"
+                    },
+                    {
+                      "id": "create_one_pSecondaryUOMCode",
+                      "name": "pSecondaryUOMCode",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pOrganizationCode",
+                      "name": "pOrganizationCode",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pLotNumber",
+                      "name": "pLotNumber",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pDemandSourceType",
+                      "name": "pDemandSourceType",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pSupplySourceHeaderNumber",
+                      "name": "pSupplySourceHeaderNumber",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pSupplySourceType",
+                      "name": "pSupplySourceType",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pSecondaryReservationQuantity",
+                      "name": "pSecondaryReservationQuantity",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pSupplySourceHeaderId",
+                      "name": "pSupplySourceHeaderId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pSourceFulfillmentLineNumber",
+                      "name": "pSourceFulfillmentLineNumber",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pPickQuantity",
+                      "name": "pPickQuantity",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_pDemandTaskId",
+                      "name": "pDemandTaskId",
+                      "type": "string",
+                      "value": ""
                     }
                   ],
                   "diagram": {
@@ -1571,7 +2117,325 @@
                   }
                 }
               ]
-            }
+            },
+            "rootNode": "start_44",
+            "pipelineNodes": [
+              {
+                "id": "start_44",
+                "code": "START",
+                "type": "START",
+                "metadata": {
+                  "name": "Start",
+                  "description": "Start of loop pipeline"
+                },
+                "outcomes": {
+                  "success": "create_one"
+                },
+                "inputs": [],
+                "diagram": {
+                  "x": 9350,
+                  "y": 8404
+                }
+              },
+              {
+                "id": "create_one",
+                "code": "CREATE_ONE",
+                "type": "BO_FUNCTION",
+                "metadata": {
+                  "name": "Create One",
+                  "businessObjectCode": "ORA_SCM_INVENTORYM_RESERVATIONSMAI",
+                  "functionName": "create_inventoryReservations"
+                },
+                "outcomes": {
+                  "success": "end_44"
+                },
+                "inputs": [
+                  {
+                    "id": "create_one_pDemandProjectNumber",
+                    "name": "pDemandProjectNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pSupplyTaskNumber",
+                    "name": "pSupplyTaskNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pSourceFulfillmentLineId",
+                    "name": "pSourceFulfillmentLineId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pSecondaryUnitOfMeasure",
+                    "name": "pSecondaryUnitOfMeasure",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pSupplyTaskId",
+                    "name": "pSupplyTaskId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pShipToPartyId",
+                    "name": "pShipToPartyId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pDemandSourceName",
+                    "name": "pDemandSourceName",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pDemandSourceTypeId",
+                    "name": "pDemandSourceTypeId",
+                    "type": "string",
+                    "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceTypeId}}"
+                  },
+                  {
+                    "id": "create_one_pLocator",
+                    "name": "pLocator",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pDemandSourceHeaderId",
+                    "name": "pDemandSourceHeaderId",
+                    "type": "string",
+                    "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceHeaderId}}"
+                  },
+                  {
+                    "id": "create_one_pDemandProjectId",
+                    "name": "pDemandProjectId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pSupplyProjectId",
+                    "name": "pSupplyProjectId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pDemandSourceHeaderNumber",
+                    "name": "pDemandSourceHeaderNumber",
+                    "type": "string",
+                    "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceHeaderNumber}}"
+                  },
+                  {
+                    "id": "create_one_pInventoryItemId",
+                    "name": "pInventoryItemId",
+                    "type": "string",
+                    "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.InventoryItemId}}"
+                  },
+                  {
+                    "id": "create_one_pLocatorId",
+                    "name": "pLocatorId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pSupplySourceLineNumber",
+                    "name": "pSupplySourceLineNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pRevision",
+                    "name": "pRevision",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pReservationQuantity",
+                    "name": "pReservationQuantity",
+                    "type": "string",
+                    "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.RequestedQuantity}}"
+                  },
+                  {
+                    "id": "create_one_pSupplySourceTypeId",
+                    "name": "pSupplySourceTypeId",
+                    "type": "string",
+                    "value": "13"
+                  },
+                  {
+                    "id": "create_one_pOperationSequenceNumber",
+                    "name": "pOperationSequenceNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pOrderInterfaceStatus",
+                    "name": "pOrderInterfaceStatus",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pSupplyProjectNumber",
+                    "name": "pSupplyProjectNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pDemandSourceLineNumber",
+                    "name": "pDemandSourceLineNumber",
+                    "type": "string",
+                    "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceLineNumber}}"
+                  },
+                  {
+                    "id": "create_one_pSupplySourceLineId",
+                    "name": "pSupplySourceLineId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pOrganizationId",
+                    "name": "pOrganizationId",
+                    "type": "string",
+                    "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.OrganizationId}}"
+                  },
+                  {
+                    "id": "create_one_pDemandTaskNumber",
+                    "name": "pDemandTaskNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pSubinventoryCode",
+                    "name": "pSubinventoryCode",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pSubinventoryId",
+                    "name": "pSubinventoryId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pReservationUOMCode",
+                    "name": "pReservationUOMCode",
+                    "type": "string",
+                    "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.OrderedUOMCode}}"
+                  },
+                  {
+                    "id": "create_one_pRequirementDate",
+                    "name": "pRequirementDate",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pItemNumber",
+                    "name": "pItemNumber",
+                    "type": "string",
+                    "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.ItemNumber}}"
+                  },
+                  {
+                    "id": "create_one_pReservationId",
+                    "name": "pReservationId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pDemandSourceLineId",
+                    "name": "pDemandSourceLineId",
+                    "type": "string",
+                    "value": "{{$context.$nodes.CREATE_EACH_LINE.$currentItem.DemandSourceLineId}}"
+                  },
+                  {
+                    "id": "create_one_pSecondaryUOMCode",
+                    "name": "pSecondaryUOMCode",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pOrganizationCode",
+                    "name": "pOrganizationCode",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pLotNumber",
+                    "name": "pLotNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pDemandSourceType",
+                    "name": "pDemandSourceType",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pSupplySourceHeaderNumber",
+                    "name": "pSupplySourceHeaderNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pSupplySourceType",
+                    "name": "pSupplySourceType",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pSecondaryReservationQuantity",
+                    "name": "pSecondaryReservationQuantity",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pSupplySourceHeaderId",
+                    "name": "pSupplySourceHeaderId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pSourceFulfillmentLineNumber",
+                    "name": "pSourceFulfillmentLineNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pPickQuantity",
+                    "name": "pPickQuantity",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_pDemandTaskId",
+                    "name": "pDemandTaskId",
+                    "type": "string",
+                    "value": ""
+                  }
+                ],
+                "diagram": {
+                  "x": 9350,
+                  "y": 8555
+                }
+              },
+              {
+                "id": "end_44",
+                "code": "END",
+                "type": "END",
+                "metadata": {
+                  "name": "End",
+                  "description": "End of loop pipeline"
+                },
+                "outcomes": {},
+                "inputs": [],
+                "diagram": {
+                  "x": 5000,
+                  "y": 5440
+                }
+              }
+            ]
           },
           "outcomes": {
             "success": "27"
@@ -2005,16 +2869,46 @@
                   },
                   "inputs": [
                     {
-                      "id": "create_one_61_pOrganizationCode",
-                      "name": "pOrganizationCode",
+                      "id": "create_one_61_pDemandProjectNumber",
+                      "name": "pDemandProjectNumber",
                       "type": "string",
-                      "value": "{{$context.$nodes.CLASSIFY_REQUEST.$output.result.organizationCode}}"
+                      "value": ""
                     },
                     {
-                      "id": "create_one_61_pItemNumber",
-                      "name": "pItemNumber",
+                      "id": "create_one_61_pSupplyTaskNumber",
+                      "name": "pSupplyTaskNumber",
                       "type": "string",
-                      "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.ItemNumber}}"
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pSourceFulfillmentLineId",
+                      "name": "pSourceFulfillmentLineId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pSecondaryUnitOfMeasure",
+                      "name": "pSecondaryUnitOfMeasure",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pSupplyTaskId",
+                      "name": "pSupplyTaskId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pShipToPartyId",
+                      "name": "pShipToPartyId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pDemandSourceName",
+                      "name": "pDemandSourceName",
+                      "type": "string",
+                      "value": ""
                     },
                     {
                       "id": "create_one_61_pDemandSourceTypeId",
@@ -2023,10 +2917,28 @@
                       "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.DemandSourceTypeId}}"
                     },
                     {
+                      "id": "create_one_61_pLocator",
+                      "name": "pLocator",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
                       "id": "create_one_61_pDemandSourceHeaderId",
                       "name": "pDemandSourceHeaderId",
                       "type": "string",
                       "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.DemandSourceHeaderId}}"
+                    },
+                    {
+                      "id": "create_one_61_pDemandProjectId",
+                      "name": "pDemandProjectId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pSupplyProjectId",
+                      "name": "pSupplyProjectId",
+                      "type": "string",
+                      "value": ""
                     },
                     {
                       "id": "create_one_61_pDemandSourceHeaderNumber",
@@ -2035,10 +2947,58 @@
                       "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.DemandSourceHeaderNumber}}"
                     },
                     {
-                      "id": "create_one_61_pDemandSourceLineId",
-                      "name": "pDemandSourceLineId",
+                      "id": "create_one_61_pInventoryItemId",
+                      "name": "pInventoryItemId",
                       "type": "string",
-                      "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.DemandSourceLineId}}"
+                      "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.InventoryItemId}}"
+                    },
+                    {
+                      "id": "create_one_61_pLocatorId",
+                      "name": "pLocatorId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pSupplySourceLineNumber",
+                      "name": "pSupplySourceLineNumber",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pRevision",
+                      "name": "pRevision",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pReservationQuantity",
+                      "name": "pReservationQuantity",
+                      "type": "string",
+                      "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.RequestedQuantity}}"
+                    },
+                    {
+                      "id": "create_one_61_pSupplySourceTypeId",
+                      "name": "pSupplySourceTypeId",
+                      "type": "string",
+                      "value": "13"
+                    },
+                    {
+                      "id": "create_one_61_pOperationSequenceNumber",
+                      "name": "pOperationSequenceNumber",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pOrderInterfaceStatus",
+                      "name": "pOrderInterfaceStatus",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pSupplyProjectNumber",
+                      "name": "pSupplyProjectNumber",
+                      "type": "string",
+                      "value": ""
                     },
                     {
                       "id": "create_one_61_pDemandSourceLineNumber",
@@ -2047,10 +3007,130 @@
                       "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.DemandSourceLineNumber}}"
                     },
                     {
-                      "id": "create_one_61_pReservationQuantity",
-                      "name": "pReservationQuantity",
+                      "id": "create_one_61_pSupplySourceLineId",
+                      "name": "pSupplySourceLineId",
                       "type": "string",
-                      "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.RequestedQuantity}}"
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pOrganizationId",
+                      "name": "pOrganizationId",
+                      "type": "string",
+                      "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.OrganizationId}}"
+                    },
+                    {
+                      "id": "create_one_61_pDemandTaskNumber",
+                      "name": "pDemandTaskNumber",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pSubinventoryCode",
+                      "name": "pSubinventoryCode",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pSubinventoryId",
+                      "name": "pSubinventoryId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pReservationUOMCode",
+                      "name": "pReservationUOMCode",
+                      "type": "string",
+                      "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.OrderedUOMCode}}"
+                    },
+                    {
+                      "id": "create_one_61_pRequirementDate",
+                      "name": "pRequirementDate",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pItemNumber",
+                      "name": "pItemNumber",
+                      "type": "string",
+                      "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.ItemNumber}}"
+                    },
+                    {
+                      "id": "create_one_61_pReservationId",
+                      "name": "pReservationId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pDemandSourceLineId",
+                      "name": "pDemandSourceLineId",
+                      "type": "string",
+                      "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.DemandSourceLineId}}"
+                    },
+                    {
+                      "id": "create_one_61_pSecondaryUOMCode",
+                      "name": "pSecondaryUOMCode",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pOrganizationCode",
+                      "name": "pOrganizationCode",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pLotNumber",
+                      "name": "pLotNumber",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pDemandSourceType",
+                      "name": "pDemandSourceType",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pSupplySourceHeaderNumber",
+                      "name": "pSupplySourceHeaderNumber",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pSupplySourceType",
+                      "name": "pSupplySourceType",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pSecondaryReservationQuantity",
+                      "name": "pSecondaryReservationQuantity",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pSupplySourceHeaderId",
+                      "name": "pSupplySourceHeaderId",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pSourceFulfillmentLineNumber",
+                      "name": "pSourceFulfillmentLineNumber",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pPickQuantity",
+                      "name": "pPickQuantity",
+                      "type": "string",
+                      "value": ""
+                    },
+                    {
+                      "id": "create_one_61_pDemandTaskId",
+                      "name": "pDemandTaskId",
+                      "type": "string",
+                      "value": ""
                     }
                   ],
                   "diagram": {
@@ -2073,7 +3153,323 @@
                   }
                 }
               ]
-            }
+            },
+            "rootNode": "start_61",
+            "pipelineNodes": [
+              {
+                "id": "start_61",
+                "code": "START",
+                "type": "START",
+                "metadata": {
+                  "name": "Start"
+                },
+                "outcomes": {
+                  "success": "create_one_61"
+                },
+                "inputs": [],
+                "diagram": {
+                  "x": 10100,
+                  "y": 10012
+                }
+              },
+              {
+                "id": "create_one_61",
+                "code": "REALLOC_CREATE_ONE",
+                "type": "BO_FUNCTION",
+                "metadata": {
+                  "name": "Realloc Create One",
+                  "businessObjectCode": "ORA_SCM_INVENTORYM_RESERVATIONSMAI",
+                  "functionName": "create_inventoryReservations"
+                },
+                "outcomes": {
+                  "success": "end_61"
+                },
+                "inputs": [
+                  {
+                    "id": "create_one_61_pDemandProjectNumber",
+                    "name": "pDemandProjectNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pSupplyTaskNumber",
+                    "name": "pSupplyTaskNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pSourceFulfillmentLineId",
+                    "name": "pSourceFulfillmentLineId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pSecondaryUnitOfMeasure",
+                    "name": "pSecondaryUnitOfMeasure",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pSupplyTaskId",
+                    "name": "pSupplyTaskId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pShipToPartyId",
+                    "name": "pShipToPartyId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pDemandSourceName",
+                    "name": "pDemandSourceName",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pDemandSourceTypeId",
+                    "name": "pDemandSourceTypeId",
+                    "type": "string",
+                    "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.DemandSourceTypeId}}"
+                  },
+                  {
+                    "id": "create_one_61_pLocator",
+                    "name": "pLocator",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pDemandSourceHeaderId",
+                    "name": "pDemandSourceHeaderId",
+                    "type": "string",
+                    "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.DemandSourceHeaderId}}"
+                  },
+                  {
+                    "id": "create_one_61_pDemandProjectId",
+                    "name": "pDemandProjectId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pSupplyProjectId",
+                    "name": "pSupplyProjectId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pDemandSourceHeaderNumber",
+                    "name": "pDemandSourceHeaderNumber",
+                    "type": "string",
+                    "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.DemandSourceHeaderNumber}}"
+                  },
+                  {
+                    "id": "create_one_61_pInventoryItemId",
+                    "name": "pInventoryItemId",
+                    "type": "string",
+                    "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.InventoryItemId}}"
+                  },
+                  {
+                    "id": "create_one_61_pLocatorId",
+                    "name": "pLocatorId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pSupplySourceLineNumber",
+                    "name": "pSupplySourceLineNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pRevision",
+                    "name": "pRevision",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pReservationQuantity",
+                    "name": "pReservationQuantity",
+                    "type": "string",
+                    "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.RequestedQuantity}}"
+                  },
+                  {
+                    "id": "create_one_61_pSupplySourceTypeId",
+                    "name": "pSupplySourceTypeId",
+                    "type": "string",
+                    "value": "13"
+                  },
+                  {
+                    "id": "create_one_61_pOperationSequenceNumber",
+                    "name": "pOperationSequenceNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pOrderInterfaceStatus",
+                    "name": "pOrderInterfaceStatus",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pSupplyProjectNumber",
+                    "name": "pSupplyProjectNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pDemandSourceLineNumber",
+                    "name": "pDemandSourceLineNumber",
+                    "type": "string",
+                    "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.DemandSourceLineNumber}}"
+                  },
+                  {
+                    "id": "create_one_61_pSupplySourceLineId",
+                    "name": "pSupplySourceLineId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pOrganizationId",
+                    "name": "pOrganizationId",
+                    "type": "string",
+                    "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.OrganizationId}}"
+                  },
+                  {
+                    "id": "create_one_61_pDemandTaskNumber",
+                    "name": "pDemandTaskNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pSubinventoryCode",
+                    "name": "pSubinventoryCode",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pSubinventoryId",
+                    "name": "pSubinventoryId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pReservationUOMCode",
+                    "name": "pReservationUOMCode",
+                    "type": "string",
+                    "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.OrderedUOMCode}}"
+                  },
+                  {
+                    "id": "create_one_61_pRequirementDate",
+                    "name": "pRequirementDate",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pItemNumber",
+                    "name": "pItemNumber",
+                    "type": "string",
+                    "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.ItemNumber}}"
+                  },
+                  {
+                    "id": "create_one_61_pReservationId",
+                    "name": "pReservationId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pDemandSourceLineId",
+                    "name": "pDemandSourceLineId",
+                    "type": "string",
+                    "value": "{{$context.$nodes.REALLOC_EACH_LINE.$currentItem.DemandSourceLineId}}"
+                  },
+                  {
+                    "id": "create_one_61_pSecondaryUOMCode",
+                    "name": "pSecondaryUOMCode",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pOrganizationCode",
+                    "name": "pOrganizationCode",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pLotNumber",
+                    "name": "pLotNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pDemandSourceType",
+                    "name": "pDemandSourceType",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pSupplySourceHeaderNumber",
+                    "name": "pSupplySourceHeaderNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pSupplySourceType",
+                    "name": "pSupplySourceType",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pSecondaryReservationQuantity",
+                    "name": "pSecondaryReservationQuantity",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pSupplySourceHeaderId",
+                    "name": "pSupplySourceHeaderId",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pSourceFulfillmentLineNumber",
+                    "name": "pSourceFulfillmentLineNumber",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pPickQuantity",
+                    "name": "pPickQuantity",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "id": "create_one_61_pDemandTaskId",
+                    "name": "pDemandTaskId",
+                    "type": "string",
+                    "value": ""
+                  }
+                ],
+                "diagram": {
+                  "x": 10100,
+                  "y": 10163
+                }
+              },
+              {
+                "id": "end_61",
+                "code": "END",
+                "type": "END",
+                "metadata": {
+                  "name": "End"
+                },
+                "outcomes": {},
+                "inputs": [],
+                "diagram": {
+                  "x": 0,
+                  "y": 300
+                }
+              }
+            ]
           },
           "outcomes": {
             "success": "62"
@@ -2263,7 +3659,7 @@
     "defaultModelConfiguration": "ORA_MODEL_CONFIG_PREMIUM_OPEN_AI_GPT_4_1_MINI"
   },
   "status": "DRAFT",
-  "version": 88588155,
+  "version": 88918875,
   "family": "SCM",
   "product": "INVENTORY_MANAGEMENT",
   "ownerName": null,
@@ -2277,6 +3673,6 @@
   "aiAppsCompatibleFlag": false,
   "followupEnabledFlag": false,
   "header": {
-    "ETag": "\"12\""
+    "ETag": "\"20\""
   }
 }
